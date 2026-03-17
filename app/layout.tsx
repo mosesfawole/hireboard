@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, JetBrains_Mono } from "next/font/google";
+import SessionProvider from "@/components/providers/SessionProvider";
+
 import "./globals.css";
 
 const syne = Syne({
@@ -32,29 +34,21 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
-        {/* 
-          This script runs before React loads.
-          It reads the saved theme from localStorage and applies 
-          the 'dark' class to the html element immediately —
-          preventing a flash of the wrong theme on page load.
-        */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              try {
-                const theme = localStorage.getItem('hireboard-theme');
-                if (theme === 'dark' || !theme) {
-                  document.documentElement.classList.add('dark');
-                }
-              } catch(e) {}
-            `,
+            try {
+              const theme = localStorage.getItem('hireboard-theme');
+              if (theme === 'dark' || !theme) document.documentElement.classList.add('dark');
+            } catch(e) {}
+          `,
           }}
         />
       </head>
       <body
         className={`${syne.variable} ${jetbrains.variable} font-mono min-h-screen`}
       >
-        {children}
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
