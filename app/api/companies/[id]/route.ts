@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { supabase } from "@/lib/supabse";
+import { supabase } from "@/lib/supabase";
 
 export async function DELETE(
   req: NextRequest,
