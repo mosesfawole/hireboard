@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase } from "./supabse";
 import type {
   Job,
   Company,
@@ -199,7 +199,7 @@ export async function getAdminStats(): Promise<AdminStats> {
     supabase.from("users").select("id"),
   ]);
 
-  const allJobs = jobs.data ?? [];
+  const allJobs = (jobs.data ?? []) as Pick<Job, "status" | "created_at">[];
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 

@@ -33,7 +33,6 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
         border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
       }}
     >
-      {/* Header */}
       <div
         className="flex items-center justify-between px-4 py-3"
         style={{ borderBottom: `1px solid ${isDark ? "#252540" : "#e0e0f0"}` }}
@@ -52,7 +51,6 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
         </span>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-xs min-w-[500px]">
           <thead>
@@ -61,13 +59,13 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                 borderBottom: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
               }}
             >
-              {["Company", "Location", "Website", "Jobs Posted", "Joined", "Actions"].map((h) => (
+              {["Company", "Location", "Website", "Jobs Posted", "Joined", "Actions"].map((heading) => (
                 <th
-                  key={h}
+                  key={heading}
                   className="text-left px-4 py-3 font-mono font-normal"
                   style={{ color: "#5a5a8a" }}
                 >
-                  {h}
+                  {heading}
                 </th>
               ))}
             </tr>
@@ -79,15 +77,13 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                 style={{
                   borderBottom: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
                 }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background =
-                    isDark ? "#161628" : "#f8f8fc";
+                onMouseEnter={(event) => {
+                  event.currentTarget.style.background = isDark ? "#161628" : "#f8f8fc";
                 }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                onMouseLeave={(event) => {
+                  event.currentTarget.style.background = "transparent";
                 }}
               >
-                {/* Company name + logo */}
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2.5">
                     <div
@@ -115,18 +111,16 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                   </div>
                 </td>
 
-                {/* Location */}
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1" style={{ color: "#5a5a8a" }}>
                     <MapPin size={10} />
-                    <span className="font-mono">{company.location ?? "—"}</span>
+                    <span className="font-mono">{company.location ?? "-"}</span>
                   </div>
                 </td>
 
-                {/* Website */}
                 <td className="px-4 py-3">
                   {company.website ? (
-                    
+                    <a
                       href={company.website}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -137,21 +131,18 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                       Visit
                     </a>
                   ) : (
-                    <span style={{ color: "#5a5a8a" }}>—</span>
+                    <span style={{ color: "#5a5a8a" }}>-</span>
                   )}
                 </td>
 
-                {/* Jobs count */}
                 <td className="px-4 py-3 font-mono" style={{ color: "#5a5a8a" }}>
                   {company.jobs?.length ?? 0} jobs
                 </td>
 
-                {/* Joined date */}
                 <td className="px-4 py-3 font-mono" style={{ color: "#5a5a8a" }}>
                   {new Date(company.created_at).toLocaleDateString()}
                 </td>
 
-                {/* Actions */}
                 <td className="px-4 py-3">
                   <button
                     onClick={() => deleteCompany(company.id)}

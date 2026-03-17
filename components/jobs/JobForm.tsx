@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useJobStore } from "@/store/useJobStore";
 import { Send, Loader2 } from "lucide-react";
+import { getErrorMessage } from "@/lib/errors";
+import type { CreateJobInput, JobType } from "@/types";
 
 const CATEGORIES = [
   "Engineering",
@@ -16,7 +18,7 @@ const CATEGORIES = [
   "Other",
 ];
 
-const JOB_TYPES = [
+const JOB_TYPES: { label: string; value: JobType }[] = [
   { label: "Full Time", value: "FULL_TIME" },
   { label: "Part Time", value: "PART_TIME" },
   { label: "Contract", value: "CONTRACT" },
@@ -24,13 +26,16 @@ const JOB_TYPES = [
   { label: "Internship", value: "INTERNSHIP" },
 ];
 
+type JobFormState = Omit<CreateJobInput, "company_id"> & {
+  salary: string;
+};
+
 export default function JobForm() {
   const router = useRouter();
   const { isDark } = useJobStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<JobFormState>({
     title: "",
     description: "",
     location: "",
@@ -40,28 +45,27 @@ export default function JobForm() {
     apply_url: "",
   });
 
-  const update = (key: string, value: string) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const update = <K extends keyof JobFormState>(key: K, value: JobFormState[K]) =>
+    setForm((previous) => ({ ...previous, [key]: value }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setIsLoading(true);
     setError(null);
 
     try {
-      const res = await fetch("/api/jobs", {
+      const response = await fetch("/api/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed to post job");
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Failed to post job");
 
-      // Success — go back to dashboard
       router.push("/company/dashboard?posted=true");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error, "Failed to post job"));
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +97,6 @@ export default function JobForm() {
         </div>
       )}
 
-      {/* Job title */}
       <div className="space-y-1.5">
         <label className="text-xs font-mono font-semibold" style={labelStyle}>
           Job Title *
@@ -102,14 +105,13 @@ export default function JobForm() {
           type="text"
           placeholder="e.g. Senior Frontend Developer"
           value={form.title}
-          onChange={(e) => update("title", e.target.value)}
+          onChange={(event) => update("title", event.target.value)}
           className={inputClass}
           style={inputStyle}
           required
         />
       </div>
 
-      {/* Type and Category */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label className="text-xs font-mono font-semibold" style={labelStyle}>
@@ -117,14 +119,14 @@ export default function JobForm() {
           </label>
           <select
             value={form.type}
-            onChange={(e) => update("type", e.target.value)}
+            onChange={(event) => update("type", event.target.value as JobType)}
             className={inputClass}
             style={inputStyle}
             required
           >
-            {JOB_TYPES.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
+            {JOB_TYPES.map((jobType) => (
+              <option key={jobType.value} value={jobType.value}>
+                {jobType.label}
               </option>
             ))}
           </select>
@@ -136,21 +138,20 @@ export default function JobForm() {
           </label>
           <select
             value={form.category}
-            onChange={(e) => update("category", e.target.value)}
+            onChange={(event) => update("category", event.target.value)}
             className={inputClass}
             style={inputStyle}
             required
           >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {category}
               </option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* Location and Salary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label className="text-xs font-mono font-semibold" style={labelStyle}>
@@ -160,7 +161,7 @@ export default function JobForm() {
             type="text"
             placeholder="e.g. Lagos, Nigeria or Remote"
             value={form.location}
-            onChange={(e) => update("location", e.target.value)}
+            onChange={(event) => update("location", event.target.value)}
             className={inputClass}
             style={inputStyle}
             required
@@ -175,14 +176,13 @@ export default function JobForm() {
             type="text"
             placeholder="e.g. $80,000 - $100,000"
             value={form.salary}
-            onChange={(e) => update("salary", e.target.value)}
+            onChange={(event) => update("salary", event.target.value)}
             className={inputClass}
             style={inputStyle}
           />
         </div>
       </div>
 
-      {/* Description */}
       <div className="space-y-1.5">
         <label className="text-xs font-mono font-semibold" style={labelStyle}>
           Job Description *
@@ -190,7 +190,7 @@ export default function JobForm() {
         <textarea
           placeholder="Describe the role, responsibilities and requirements..."
           value={form.description}
-          onChange={(e) => update("description", e.target.value)}
+          onChange={(event) => update("description", event.target.value)}
           rows={6}
           className={inputClass}
           style={{ ...inputStyle, resize: "vertical" }}
@@ -198,7 +198,6 @@ export default function JobForm() {
         />
       </div>
 
-      {/* Apply URL */}
       <div className="space-y-1.5">
         <label className="text-xs font-mono font-semibold" style={labelStyle}>
           Application URL *
@@ -207,7 +206,7 @@ export default function JobForm() {
           type="url"
           placeholder="https://yourcompany.com/careers/apply"
           value={form.apply_url}
-          onChange={(e) => update("apply_url", e.target.value)}
+          onChange={(event) => update("apply_url", event.target.value)}
           className={inputClass}
           style={inputStyle}
           required
@@ -217,7 +216,6 @@ export default function JobForm() {
         </p>
       </div>
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={isLoading}
@@ -241,10 +239,7 @@ export default function JobForm() {
         )}
       </button>
 
-      <p
-        className="text-[11px] font-mono text-center"
-        style={{ color: "#5a5a8a" }}
-      >
+      <p className="text-[11px] font-mono text-center" style={{ color: "#5a5a8a" }}>
         Your job will be reviewed by our team before going live
       </p>
     </form>

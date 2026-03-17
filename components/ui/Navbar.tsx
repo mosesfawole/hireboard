@@ -15,7 +15,7 @@ import {
 export default function Navbar() {
   const { data: session } = useSession();
   const { isDark, toggleTheme } = useJobStore();
-  const role = (session?.user as any)?.role;
+  const role = session?.user?.role;
 
   // Apply saved theme on mount
   useEffect(() => {

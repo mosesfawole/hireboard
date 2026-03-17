@@ -72,6 +72,7 @@ export type UserRole = "ADMIN" | "COMPANY";
 export interface User {
   id: string;
   email: string;
+  password?: string;
   role: UserRole;
   created_at: string;
   // A user can have one company profile

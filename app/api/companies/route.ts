@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmail, createUser, createCompany } from "@/lib/db";
+import { getErrorMessage } from "@/lib/errors";
 
 // POST /api/companies — register a new company account
 // Creates a user + company profile together
@@ -62,8 +63,8 @@ export async function POST(req: NextRequest) {
       { user: { id: user.id, email: user.email }, company },
       { status: 201 },
     );
-  } catch (err: any) {
-    console.error("[POST /api/companies]", err.message);
+  } catch (error) {
+    console.error("[POST /api/companies]", getErrorMessage(error));
     return NextResponse.json({ error: "Registration failed" }, { status: 500 });
   }
 }

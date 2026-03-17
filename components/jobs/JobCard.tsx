@@ -13,18 +13,7 @@ interface Props {
 export default function JobCard({ job }: Props) {
   const { isDark } = useJobStore();
   const company = job.company;
-
-  // Format how long ago the job was posted
-  // e.g. "2 days ago" or "just now"
-  const timeAgo = (dateStr: string) => {
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    if (days === 0) return "Today";
-    if (days === 1) return "Yesterday";
-    if (days < 7) return `${days} days ago`;
-    if (days < 30) return `${Math.floor(days / 7)}w ago`;
-    return `${Math.floor(days / 30)}mo ago`;
-  };
+  const postedAt = formatTimeAgo(job.created_at);
 
   return (
     <Link
@@ -48,7 +37,6 @@ export default function JobCard({ job }: Props) {
         boxShadow: job.featured ? "0 0 20px rgba(77,159,255,0.06)" : "none",
       }}
     >
-      {/* Featured label */}
       {job.featured && (
         <div className="flex items-center gap-1 mb-3">
           <span
@@ -58,13 +46,12 @@ export default function JobCard({ job }: Props) {
               color: "#4d9fff",
             }}
           >
-            ★ FEATURED
+            FEATURED
           </span>
         </div>
       )}
 
       <div className="flex items-start gap-3">
-        {/* Company logo */}
         <div
           className="w-12 h-12 rounded-xl overflow-hidden shrink-0 flex items-center justify-center"
           style={{ background: isDark ? "#1a1a30" : "#f0f0f8" }}
@@ -83,7 +70,6 @@ export default function JobCard({ job }: Props) {
           )}
         </div>
 
-        {/* Job info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
@@ -93,24 +79,19 @@ export default function JobCard({ job }: Props) {
               >
                 {job.title}
               </p>
-              <p
-                className="text-xs font-mono mt-0.5"
-                style={{ color: "#5a5a8a" }}
-              >
+              <p className="text-xs font-mono mt-0.5" style={{ color: "#5a5a8a" }}>
                 {company?.name ?? "Unknown Company"}
               </p>
             </div>
 
-            {/* Posted time */}
             <span
               className="text-[10px] font-mono shrink-0"
               style={{ color: "#5a5a8a" }}
             >
-              {timeAgo(job.created_at)}
+              {postedAt}
             </span>
           </div>
 
-          {/* Meta row */}
           <div className="flex flex-wrap items-center gap-3 mt-2.5">
             <Badge
               label={formatJobType(job.type)}
@@ -147,4 +128,17 @@ export default function JobCard({ job }: Props) {
       </div>
     </Link>
   );
+}
+
+function formatTimeAgo(dateStr: string) {
+  const now = new Date();
+  const postedDate = new Date(dateStr);
+  const diff = now.getTime() - postedDate.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  if (days <= 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days} days ago`;
+  if (days < 30) return `${Math.floor(days / 7)}w ago`;
+  return `${Math.floor(days / 30)}mo ago`;
 }

@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import type { Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { getUserByEmail, verifyPassword } from "@/lib/db";
 
@@ -36,7 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Otherwise check the database for a company account
         const user = await getUserByEmail(email);
-        if (!user) return null;
+        if (!user?.password) return null;
 
         const passwordValid = await verifyPassword(password, user.password);
         if (!passwordValid) return null;
@@ -61,8 +62,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
-        token.companyId = (user as any).companyId;
+        token.role = user.role;
+        token.companyId = user.companyId;
       }
       return token;
     },
@@ -70,10 +71,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // This runs when session is accessed via useSession()
     // We copy the token data into the session object
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string;
-        (session.user as any).role = token.role;
-        (session.user as any).companyId = token.companyId;
+      if (token.id && token.role) {
+        session.user.id = String(token.id);
+        session.user.role = token.role as Session["user"]["role"];
+        session.user.companyId =
+          typeof token.companyId === "string" ? token.companyId : undefined;
       }
       return session;
     },

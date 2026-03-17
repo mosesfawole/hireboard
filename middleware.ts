@@ -20,7 +20,7 @@ export default auth((req) => {
 
   // Check admin routes
   if (adminRoutes.some((route) => pathname.startsWith(route))) {
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/auth/login", req.url));
     }
   }

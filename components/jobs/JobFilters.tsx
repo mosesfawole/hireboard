@@ -1,5 +1,5 @@
 "use client";
-import { Search, X, SlidersHorizontal } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useJobStore } from "@/store/useJobStore";
 
 const CATEGORIES = [
