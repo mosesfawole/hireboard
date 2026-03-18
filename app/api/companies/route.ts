@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
 
     // Create the user account first
     const user = await createUser(email, password);
+
     if (!user) {
       return NextResponse.json(
         { error: "Failed to create account" },
@@ -64,7 +65,16 @@ export async function POST(req: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("[POST /api/companies]", getErrorMessage(error));
-    return NextResponse.json({ error: "Registration failed" }, { status: 500 });
+    const message = getErrorMessage(error, "Registration failed");
+    console.error("[POST /api/companies]", message);
+
+    return NextResponse.json(
+      {
+        error: message.includes("row-level security")
+          ? "Registration is blocked by Supabase permissions. Add SUPABASE_SERVICE_ROLE_KEY to your server env or allow inserts for registration."
+          : message,
+      },
+      { status: 500 },
+    );
   }
 }

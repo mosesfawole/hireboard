@@ -23,14 +23,15 @@ export default function Footer() {
         </div>
 
         <p className="text-xs font-mono" style={{ color: "#5a5a8a" }}>
-          <a
+          © 2026 HireBoard — Made by {""}
+          <Link
             href="https://github.com/mosesfawole"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: "#4d9fff" }}
           >
-            © 2026 HireBoard — Made by Moses Fawole
-          </a>
+            Moses Fawole
+          </Link>
         </p>
 
         <div className="flex items-center gap-4">

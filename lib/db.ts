@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabaseAdmin as supabase } from "./supabase-server";
 import type {
   Job,
   Company,
@@ -40,7 +40,14 @@ export async function createUser(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    throw new Error("User was not created.");
+  }
+
   return data as User;
 }
 
@@ -64,7 +71,14 @@ export async function createCompany(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    throw new Error("Company profile was not created.");
+  }
+
   return data as Company;
 }
 
@@ -137,13 +151,27 @@ export async function getJobById(id: string): Promise<Job | null> {
 }
 
 export async function createJob(input: CreateJobInput): Promise<Job | null> {
+  const payload = {
+    ...input,
+    salary: input.salary?.trim() ? input.salary.trim() : null,
+    status: "PENDING" as const,
+    featured: false,
+  };
+
   const { data, error } = await supabase
     .from("jobs")
-    .insert(input)
+    .insert(payload)
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    throw new Error("Job was not created.");
+  }
+
   return data as Job;
 }
 
@@ -199,7 +227,7 @@ export async function getAdminStats(): Promise<AdminStats> {
     supabase.from("users").select("id"),
   ]);
 
-  const allJobs = (jobs.data ?? []) as Pick<Job, "status" | "created_at">[];
+  const allJobs = jobs.data ?? [];
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 

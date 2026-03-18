@@ -54,10 +54,15 @@ export default function JobForm() {
     setError(null);
 
     try {
+      const payload = {
+        ...form,
+        salary: form.salary.trim() || undefined,
+      };
+
       const response = await fetch("/api/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();

@@ -50,6 +50,15 @@ export async function POST(req: NextRequest) {
     }
 
     const body = (await req.json()) as Partial<CreateJobInput>;
+    const normalizedBody = {
+      title: body.title?.trim(),
+      description: body.description?.trim(),
+      location: body.location?.trim(),
+      salary: body.salary?.trim(),
+      type: body.type,
+      category: body.category?.trim(),
+      apply_url: body.apply_url?.trim(),
+    };
 
     // Basic validation — make sure required fields are present
     const required = [
@@ -61,7 +70,7 @@ export async function POST(req: NextRequest) {
       "apply_url",
     ];
     for (const field of required) {
-      if (!body[field as keyof CreateJobInput]) {
+      if (!normalizedBody[field as keyof typeof normalizedBody]) {
         return NextResponse.json(
           { error: `${field} is required` },
           { status: 400 },
@@ -70,21 +79,16 @@ export async function POST(req: NextRequest) {
     }
 
     const job = await createJob({
-      ...body,
+      ...normalizedBody,
       company_id: companyId,
     } as CreateJobInput);
-    if (!job) {
-      return NextResponse.json(
-        { error: "Failed to create job" },
-        { status: 500 },
-      );
-    }
 
     return NextResponse.json(job, { status: 201 });
   } catch (error) {
-    console.error("[POST /api/jobs]", getErrorMessage(error));
+    const message = getErrorMessage(error, "Failed to create job");
+    console.error("[POST /api/jobs]", message);
     return NextResponse.json(
-      { error: "Failed to create job" },
+      { error: message },
       { status: 500 },
     );
   }
