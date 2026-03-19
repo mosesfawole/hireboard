@@ -18,32 +18,31 @@ export default function JobCard({ job }: Props) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="group block rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5"
+      className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-1"
       style={{
         background: job.featured
           ? isDark
             ? "rgba(77,159,255,0.05)"
             : "rgba(77,159,255,0.03)"
-          : isDark
-            ? "#0f0f20"
-            : "#ffffff",
+          : "var(--panel)",
         border: `1px solid ${
           job.featured
             ? "rgba(77,159,255,0.25)"
-            : isDark
-              ? "#252540"
-              : "#e0e0f0"
+            : "var(--panel-border)"
         }`,
-        boxShadow: job.featured ? "0 0 20px rgba(77,159,255,0.06)" : "none",
+        boxShadow: job.featured
+          ? "0 24px 50px rgba(37, 99, 235, 0.12)"
+          : "var(--panel-shadow)",
       }}
     >
       {job.featured && (
         <div className="flex items-center gap-1 mb-3">
           <span
-            className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full"
+            className="ui-badge"
             style={{
               background: "rgba(77,159,255,0.1)",
-              color: "#4d9fff",
+              color: "var(--brand)",
+              borderColor: "rgba(37, 99, 235, 0.16)",
             }}
           >
             FEATURED
@@ -54,7 +53,7 @@ export default function JobCard({ job }: Props) {
       <div className="flex items-start gap-3">
         <div
           className="w-12 h-12 rounded-xl overflow-hidden shrink-0 flex items-center justify-center"
-          style={{ background: isDark ? "#1a1a30" : "#f0f0f8" }}
+          style={{ background: "var(--surface-2)" }}
         >
           {company?.logo ? (
             <Image
@@ -66,7 +65,7 @@ export default function JobCard({ job }: Props) {
               unoptimized
             />
           ) : (
-            <Building2 size={20} style={{ color: "#5a5a8a" }} />
+            <Building2 size={20} style={{ color: "var(--text-soft)" }} />
           )}
         </div>
 
@@ -75,19 +74,16 @@ export default function JobCard({ job }: Props) {
             <div className="min-w-0">
               <p
                 className="text-sm font-display font-bold leading-tight truncate"
-                style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
+                style={{ color: "var(--text)" }}
               >
                 {job.title}
               </p>
-              <p className="text-xs font-mono mt-0.5" style={{ color: "#5a5a8a" }}>
+              <p className="text-xs font-medium mt-0.5 text-muted">
                 {company?.name ?? "Unknown Company"}
               </p>
             </div>
 
-            <span
-              className="text-[10px] font-mono shrink-0"
-              style={{ color: "#5a5a8a" }}
-            >
+            <span className="text-[10px] font-medium shrink-0 text-muted">
               {postedAt}
             </span>
           </div>
@@ -99,8 +95,7 @@ export default function JobCard({ job }: Props) {
             />
 
             <div
-              className="flex items-center gap-1 text-[11px] font-mono"
-              style={{ color: "#5a5a8a" }}
+              className="flex items-center gap-1 text-[11px] font-medium text-muted"
             >
               <MapPin size={10} />
               {job.location}
@@ -108,8 +103,7 @@ export default function JobCard({ job }: Props) {
 
             {job.salary && (
               <div
-                className="flex items-center gap-1 text-[11px] font-mono"
-                style={{ color: "#5a5a8a" }}
+                className="flex items-center gap-1 text-[11px] font-medium text-muted"
               >
                 <DollarSign size={10} />
                 {job.salary}
@@ -117,8 +111,7 @@ export default function JobCard({ job }: Props) {
             )}
 
             <div
-              className="flex items-center gap-1 text-[11px] font-mono"
-              style={{ color: "#5a5a8a" }}
+              className="flex items-center gap-1 text-[11px] font-medium text-muted"
             >
               <Clock size={10} />
               {job.category}

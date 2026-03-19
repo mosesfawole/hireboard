@@ -8,18 +8,15 @@ export default function PostJobPage() {
       <Navbar />
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8 space-y-6">
         <div>
-          <h1 className="text-xl font-display font-bold text-white">
+          <h1 className="text-xl font-display font-bold" style={{ color: "var(--text)" }}>
             Post a New Job
           </h1>
-          <p className="text-xs font-mono mt-1" style={{ color: "#5a5a8a" }}>
+          <p className="text-xs font-medium mt-1 text-muted">
             Fill in the details below. Your job will be reviewed before going
             live.
           </p>
         </div>
-        <div
-          className="rounded-xl p-6"
-          style={{ background: "#0f0f20", border: "1px solid #252540" }}
-        >
+        <div className="surface-card-strong p-6">
           <JobForm />
         </div>
       </main>

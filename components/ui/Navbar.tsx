@@ -24,10 +24,9 @@ export default function Navbar() {
 
   return (
     <nav
-      className="h-14 flex items-center px-4 md:px-8 gap-4 sticky top-0 z-30"
+      className="surface-subtle h-16 flex items-center px-4 md:px-8 gap-4 sticky top-0 z-30"
       style={{
-        background: isDark ? "#0a0a18" : "#ffffff",
-        borderBottom: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
+        borderBottom: "1px solid var(--panel-border)",
       }}
     >
       {/* Logo */}
@@ -43,9 +42,9 @@ export default function Navbar() {
         </div>
         <span
           className="font-display font-bold tracking-tight text-sm"
-          style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
+          style={{ color: "var(--text)" }}
         >
-          Hire<span style={{ color: "#4d9fff" }}>Board</span>
+          Hire<span style={{ color: "var(--brand)" }}>Board</span>
         </span>
       </Link>
 
@@ -55,7 +54,7 @@ export default function Navbar() {
         {role === "ADMIN" && (
           <Link
             href="/admin"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-mono transition-colors"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold transition-colors"
             style={{ color: "#a78bfa" }}
           >
             <Shield size={12} />
@@ -67,8 +66,8 @@ export default function Navbar() {
         {role === "COMPANY" && (
           <Link
             href="/company/dashboard"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-mono transition-colors"
-            style={{ color: "#4d9fff" }}
+            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold transition-colors"
+            style={{ color: "var(--brand)" }}
           >
             <LayoutDashboard size={12} />
             Dashboard
@@ -79,11 +78,7 @@ export default function Navbar() {
         {role === "COMPANY" && (
           <Link
             href="/company/post"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
-            style={{
-              background: "#4d9fff",
-              color: "#ffffff",
-            }}
+            className="ui-button hidden sm:flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-all"
           >
             Post a Job
           </Link>
@@ -93,8 +88,7 @@ export default function Navbar() {
         {session ? (
           <button
             onClick={() => signOut({ callbackUrl: "/jobs" })}
-            className="flex items-center gap-1.5 text-xs font-mono transition-colors"
-            style={{ color: "#5a5a8a" }}
+            className="flex items-center gap-1.5 text-xs font-semibold transition-colors text-muted"
           >
             <LogOut size={12} />
             <span className="hidden sm:block">Sign out</span>
@@ -103,15 +97,14 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href="/auth/login"
-              className="text-xs font-mono transition-colors"
-              style={{ color: isDark ? "#e0e0f4" : "#1a1a2e" }}
+              className="text-xs font-semibold transition-colors"
+              style={{ color: "var(--text)" }}
             >
               Login
             </Link>
             <Link
               href="/auth/register"
-              className="px-3 py-1.5 rounded-lg text-xs font-bold"
-              style={{ background: "#4d9fff", color: "#ffffff" }}
+              className="ui-button px-4 py-2 text-xs font-bold"
             >
               Post a Job
             </Link>
@@ -121,16 +114,12 @@ export default function Navbar() {
         {/* Theme toggle */}
         <button
           onClick={toggleTheme}
-          className="p-1.5 rounded-lg transition-all"
-          style={{
-            background: isDark ? "#13132a" : "#f0f0f8",
-            border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-          }}
+          className="ui-button-secondary p-2.5 transition-all"
         >
           {isDark ? (
-            <Sun size={13} style={{ color: "#f0c040" }} />
+            <Sun size={13} style={{ color: "var(--warning)" }} />
           ) : (
-            <Moon size={13} style={{ color: "#4d9fff" }} />
+            <Moon size={13} style={{ color: "var(--brand)" }} />
           )}
         </button>
       </div>

@@ -23,16 +23,10 @@ const JOB_TYPES = [
 ];
 
 export default function JobFilters() {
-  const { filters, setFilter, clearFilters, isDark } = useJobStore();
+  const { filters, setFilter, clearFilters } = useJobStore();
 
   const hasActiveFilters =
     filters.search || filters.category || filters.type || filters.location;
-
-  const inputStyle = {
-    background: isDark ? "#0f0f20" : "#ffffff",
-    border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-    color: isDark ? "#ffffff" : "#1a1a2e",
-  };
 
   return (
     <div className="space-y-3">
@@ -41,21 +35,19 @@ export default function JobFilters() {
         <Search
           size={13}
           className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-          style={{ color: "#5a5a8a" }}
+          style={{ color: "var(--text-soft)" }}
         />
         <input
           type="text"
           placeholder="Search jobs, companies..."
           value={filters.search}
           onChange={(e) => setFilter("search", e.target.value)}
-          className="w-full rounded-xl pl-9 pr-4 py-2.5 text-sm outline-none transition-colors"
-          style={inputStyle}
+          className="ui-input w-full pl-10 pr-10 py-3 text-sm"
         />
         {filters.search && (
           <button
             onClick={() => setFilter("search", "")}
-            className="absolute right-3 top-1/2 -translate-y-1/2"
-            style={{ color: "#5a5a8a" }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted"
           >
             <X size={13} />
           </button>
@@ -68,8 +60,7 @@ export default function JobFilters() {
         <select
           value={filters.category}
           onChange={(e) => setFilter("category", e.target.value)}
-          className="flex-1 min-w-[140px] rounded-xl px-3 py-2 text-xs font-mono outline-none"
-          style={inputStyle}
+          className="ui-input flex-1 min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
         >
           <option value="">All Categories</option>
           {CATEGORIES.map((c) => (
@@ -83,8 +74,7 @@ export default function JobFilters() {
         <select
           value={filters.type}
           onChange={(e) => setFilter("type", e.target.value)}
-          className="flex-1 min-w-[140px] rounded-xl px-3 py-2 text-xs font-mono outline-none"
-          style={inputStyle}
+          className="ui-input flex-1 min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
         >
           <option value="">All Types</option>
           {JOB_TYPES.map((t) => (
@@ -100,20 +90,14 @@ export default function JobFilters() {
           placeholder="Location..."
           value={filters.location}
           onChange={(e) => setFilter("location", e.target.value)}
-          className="flex-1 min-w-[140px] rounded-xl px-3 py-2 text-xs font-mono outline-none"
-          style={inputStyle}
+          className="ui-input flex-1 min-w-[140px] px-4 py-3 text-sm"
         />
 
         {/* Clear filters */}
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono transition-colors"
-            style={{
-              background: "rgba(255,77,109,0.1)",
-              color: "#ff4d6d",
-              border: "1px solid rgba(255,77,109,0.2)",
-            }}
+            className="ui-button-danger flex items-center gap-1.5 px-4 py-3 text-xs font-semibold transition-colors"
           >
             <X size={11} />
             Clear

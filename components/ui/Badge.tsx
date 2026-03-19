@@ -22,11 +22,11 @@ const variants: Record<BadgeProps["variant"], { bg: string; color: string }> = {
   purple: { bg: "rgba(167,139,250,0.1)", color: "#a78bfa" },
   gold: { bg: "rgba(240,192,64,0.1)", color: "#f0c040" },
   red: { bg: "rgba(255,77,109,0.1)", color: "#ff4d6d" },
-  muted: { bg: "rgba(90,90,138,0.1)", color: "#5a5a8a" },
+  muted: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" },
   pending: { bg: "rgba(240,192,64,0.1)", color: "#f0c040" },
   active: { bg: "rgba(0,212,170,0.1)", color: "#00d4aa" },
   rejected: { bg: "rgba(255,77,109,0.1)", color: "#ff4d6d" },
-  closed: { bg: "rgba(90,90,138,0.1)", color: "#5a5a8a" },
+  closed: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" },
 };
 
 // Maps job type strings to badge variants
@@ -68,8 +68,8 @@ export default function Badge({ label, variant }: BadgeProps) {
   const { bg, color } = variants[variant];
   return (
     <span
-      className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold"
-      style={{ background: bg, color }}
+      className="ui-badge inline-flex items-center"
+      style={{ background: bg, color, borderColor: `${color}26` }}
     >
       {label}
     </span>

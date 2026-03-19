@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function JobList({ jobs }: Props) {
-  const { filters, isDark } = useJobStore();
+  const { filters } = useJobStore();
 
   // Apply filters — only recomputes when jobs or filters change
   const filtered = useMemo(() => {
@@ -45,25 +45,18 @@ export default function JobList({ jobs }: Props) {
   if (filtered.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-16 gap-3 rounded-xl"
-        style={{
-          background: isDark ? "#0f0f20" : "#ffffff",
-          border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-        }}
+        className="surface-card flex flex-col items-center justify-center py-16 gap-3"
       >
         <div
           className="w-12 h-12 rounded-full flex items-center justify-center"
-          style={{ background: isDark ? "#1e1e38" : "#f0f0f8" }}
+          style={{ background: "var(--surface-2)" }}
         >
-          <SearchX size={20} style={{ color: "#5a5a8a" }} />
+          <SearchX size={20} style={{ color: "var(--text-soft)" }} />
         </div>
-        <p
-          className="text-sm font-semibold"
-          style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
-        >
+        <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>
           No jobs found
         </p>
-        <p className="text-xs font-mono" style={{ color: "#5a5a8a" }}>
+        <p className="text-xs font-medium text-muted">
           Try adjusting your filters
         </p>
       </div>
@@ -72,7 +65,7 @@ export default function JobList({ jobs }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs font-mono" style={{ color: "#5a5a8a" }}>
+      <p className="text-xs font-medium text-muted">
         {filtered.length} {filtered.length === 1 ? "job" : "jobs"} found
       </p>
       {filtered.map((job) => (

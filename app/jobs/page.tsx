@@ -21,12 +21,12 @@ export default async function JobsPage() {
             <Briefcase size={18} style={{ color: "#4d9fff" }} />
             <h1
               className="text-xl font-display font-bold"
-              style={{ color: "inherit" }}
+              style={{ color: "var(--text)" }}
             >
               Browse Jobs
             </h1>
           </div>
-          <p className="text-sm font-mono" style={{ color: "#5a5a8a" }}>
+          <p className="text-sm font-medium text-muted">
             {jobs.length} opportunities available
           </p>
         </div>

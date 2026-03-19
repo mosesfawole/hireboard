@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useJobStore } from "@/store/useJobStore";
 import { Send, Loader2 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import type { CreateJobInput, JobType } from "@/types";
@@ -32,7 +31,6 @@ type JobFormState = Omit<CreateJobInput, "company_id"> & {
 
 export default function JobForm() {
   const router = useRouter();
-  const { isDark } = useJobStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState<JobFormState>({
@@ -76,34 +74,20 @@ export default function JobForm() {
     }
   };
 
-  const inputClass =
-    "w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors font-mono";
-  const inputStyle = {
-    background: isDark ? "#0f0f20" : "#ffffff",
-    border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-    color: isDark ? "#ffffff" : "#1a1a2e",
-  };
-  const labelStyle = {
-    color: isDark ? "#e0e0f4" : "#1a1a2e",
-  };
+  const inputClass = "ui-input w-full px-4 py-3 text-sm outline-none";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
         <div
-          className="px-4 py-3 rounded-xl text-sm font-mono"
-          style={{
-            background: "rgba(255,77,109,0.1)",
-            border: "1px solid rgba(255,77,109,0.2)",
-            color: "#ff4d6d",
-          }}
+          className="ui-alert ui-alert-error text-sm font-medium"
         >
           {error}
         </div>
       )}
 
       <div className="space-y-1.5">
-        <label className="text-xs font-mono font-semibold" style={labelStyle}>
+        <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
           Job Title *
         </label>
         <input
@@ -112,21 +96,19 @@ export default function JobForm() {
           value={form.title}
           onChange={(event) => update("title", event.target.value)}
           className={inputClass}
-          style={inputStyle}
           required
         />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-xs font-mono font-semibold" style={labelStyle}>
+          <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
             Job Type *
           </label>
           <select
             value={form.type}
             onChange={(event) => update("type", event.target.value as JobType)}
             className={inputClass}
-            style={inputStyle}
             required
           >
             {JOB_TYPES.map((jobType) => (
@@ -138,14 +120,13 @@ export default function JobForm() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-mono font-semibold" style={labelStyle}>
+          <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
             Category *
           </label>
           <select
             value={form.category}
             onChange={(event) => update("category", event.target.value)}
             className={inputClass}
-            style={inputStyle}
             required
           >
             {CATEGORIES.map((category) => (
@@ -159,7 +140,7 @@ export default function JobForm() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-xs font-mono font-semibold" style={labelStyle}>
+          <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
             Location *
           </label>
           <input
@@ -168,14 +149,13 @@ export default function JobForm() {
             value={form.location}
             onChange={(event) => update("location", event.target.value)}
             className={inputClass}
-            style={inputStyle}
             required
           />
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-mono font-semibold" style={labelStyle}>
-            Salary <span style={{ color: "#5a5a8a" }}>(optional)</span>
+          <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
+            Salary <span className="text-muted">(optional)</span>
           </label>
           <input
             type="text"
@@ -183,13 +163,12 @@ export default function JobForm() {
             value={form.salary}
             onChange={(event) => update("salary", event.target.value)}
             className={inputClass}
-            style={inputStyle}
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-mono font-semibold" style={labelStyle}>
+        <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
           Job Description *
         </label>
         <textarea
@@ -198,13 +177,13 @@ export default function JobForm() {
           onChange={(event) => update("description", event.target.value)}
           rows={6}
           className={inputClass}
-          style={{ ...inputStyle, resize: "vertical" }}
+          style={{ resize: "vertical" }}
           required
         />
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-mono font-semibold" style={labelStyle}>
+        <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
           Application URL *
         </label>
         <input
@@ -213,10 +192,9 @@ export default function JobForm() {
           value={form.apply_url}
           onChange={(event) => update("apply_url", event.target.value)}
           className={inputClass}
-          style={inputStyle}
           required
         />
-        <p className="text-[11px] font-mono" style={{ color: "#5a5a8a" }}>
+        <p className="text-[11px] font-medium text-muted">
           Where candidates will be redirected to apply
         </p>
       </div>
@@ -224,12 +202,8 @@ export default function JobForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all"
-        style={{
-          background: isLoading ? "#1e1e38" : "#4d9fff",
-          color: isLoading ? "#5a5a8a" : "#ffffff",
-          cursor: isLoading ? "not-allowed" : "pointer",
-        }}
+        className="ui-button w-full flex items-center justify-center gap-2 py-3.5 text-sm font-bold transition-all"
+        style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
       >
         {isLoading ? (
           <>
@@ -244,7 +218,7 @@ export default function JobForm() {
         )}
       </button>
 
-      <p className="text-[11px] font-mono text-center" style={{ color: "#5a5a8a" }}>
+      <p className="text-[11px] font-medium text-center text-muted">
         Your job will be reviewed by our team before going live
       </p>
     </form>

@@ -1,5 +1,4 @@
 "use client";
-import { useJobStore } from "@/store/useJobStore";
 import {
   Briefcase,
   Building2,
@@ -15,8 +14,6 @@ interface Props {
 }
 
 export default function StatsCards({ stats }: Props) {
-  const { isDark } = useJobStore();
-
   const cards = [
     {
       icon: <Briefcase size={14} />,
@@ -61,17 +58,14 @@ export default function StatsCards({ stats }: Props) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className="rounded-xl p-4"
+          className="surface-card p-4"
           style={{
-            background: isDark ? "#0f0f20" : "#ffffff",
-            border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
             borderBottom: `2px solid ${card.accent}`,
           }}
         >
           <div className="flex items-center justify-between mb-3">
             <p
-              className="text-[10px] font-mono tracking-widest uppercase"
-              style={{ color: "#5a5a8a" }}
+              className="text-[10px] font-semibold tracking-[0.18em] uppercase text-muted"
             >
               {card.label}
             </p>
@@ -79,7 +73,7 @@ export default function StatsCards({ stats }: Props) {
           </div>
           <p
             className="text-2xl font-display font-bold"
-            style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
+            style={{ color: "var(--text)" }}
           >
             {card.value}
           </p>

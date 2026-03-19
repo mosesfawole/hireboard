@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Syne, JetBrains_Mono } from "next/font/google";
+import { Poppins, Space_Grotesk } from "next/font/google";
 import SessionProvider from "@/components/providers/SessionProvider";
 
 import "./globals.css";
 
-const syne = Syne({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-syne",
-  weight: ["400", "600", "700", "800"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const jetbrains = JetBrains_Mono({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
-  weight: ["400", "500", "700"],
+  variable: "--font-display",
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "HireBoard — Find Your Next Opportunity",
+  title: "HireBoard - Find Your Next Opportunity",
   description:
     "Browse hundreds of jobs across all industries. Post jobs, find talent.",
 };
@@ -45,9 +45,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${syne.variable} ${jetbrains.variable} font-mono min-h-screen`}
-      >
+      <body className={`${poppins.variable} ${spaceGrotesk.variable} min-h-screen`}>
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>

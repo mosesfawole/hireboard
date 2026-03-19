@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { useJobStore } from "@/store/useJobStore";
 import { Building2, Globe, MapPin, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { Company } from "@/types";
@@ -11,7 +10,6 @@ interface Props {
 }
 
 export default function CompaniesTable({ companies, onRefresh }: Props) {
-  const { isDark } = useJobStore();
   const [loading, setLoading] = useState<string | null>(null);
 
   const deleteCompany = async (id: string) => {
@@ -26,27 +24,21 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
   };
 
   return (
-    <div
-      className="rounded-xl overflow-hidden"
-      style={{
-        background: isDark ? "#0f0f20" : "#ffffff",
-        border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-      }}
-    >
+    <div className="surface-card overflow-hidden">
       <div
         className="flex items-center justify-between px-4 py-3"
-        style={{ borderBottom: `1px solid ${isDark ? "#252540" : "#e0e0f0"}` }}
+        style={{ borderBottom: "1px solid var(--panel-border)" }}
       >
         <div className="flex items-center gap-2">
-          <div className="w-1 h-4 rounded-full" style={{ background: "#a78bfa" }} />
+          <div className="w-1 h-4 rounded-full" style={{ background: "#8b5cf6" }} />
           <h2
             className="text-xs font-display font-bold tracking-widest uppercase"
-            style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
+            style={{ color: "var(--text)" }}
           >
             All Companies
           </h2>
         </div>
-        <span className="text-xs font-mono" style={{ color: "#5a5a8a" }}>
+        <span className="text-xs font-medium text-muted">
           {companies.length} total
         </span>
       </div>
@@ -54,31 +46,26 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
       <div className="overflow-x-auto">
         <table className="w-full text-xs min-w-[500px]">
           <thead>
-            <tr
-              style={{
-                borderBottom: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-              }}
-            >
-              {["Company", "Location", "Website", "Jobs Posted", "Joined", "Actions"].map((heading) => (
-                <th
-                  key={heading}
-                  className="text-left px-4 py-3 font-mono font-normal"
-                  style={{ color: "#5a5a8a" }}
-                >
-                  {heading}
-                </th>
-              ))}
+            <tr style={{ borderBottom: "1px solid var(--panel-border)" }}>
+              {["Company", "Location", "Website", "Jobs Posted", "Joined", "Actions"].map(
+                (heading) => (
+                  <th
+                    key={heading}
+                    className="text-left px-4 py-3 font-medium text-muted"
+                  >
+                    {heading}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody>
             {companies.map((company) => (
               <tr
                 key={company.id}
-                style={{
-                  borderBottom: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-                }}
+                style={{ borderBottom: "1px solid var(--panel-border)" }}
                 onMouseEnter={(event) => {
-                  event.currentTarget.style.background = isDark ? "#161628" : "#f8f8fc";
+                  event.currentTarget.style.background = "var(--bg-soft)";
                 }}
                 onMouseLeave={(event) => {
                   event.currentTarget.style.background = "transparent";
@@ -88,7 +75,7 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                   <div className="flex items-center gap-2.5">
                     <div
                       className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shrink-0"
-                      style={{ background: isDark ? "#1a1a30" : "#f0f0f8" }}
+                      style={{ background: "var(--surface-2)" }}
                     >
                       {company.logo ? (
                         <Image
@@ -99,12 +86,12 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                           unoptimized
                         />
                       ) : (
-                        <Building2 size={14} style={{ color: "#5a5a8a" }} />
+                        <Building2 size={14} style={{ color: "var(--text-soft)" }} />
                       )}
                     </div>
                     <span
                       className="font-semibold font-display"
-                      style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
+                      style={{ color: "var(--text)" }}
                     >
                       {company.name}
                     </span>
@@ -112,9 +99,9 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                 </td>
 
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-1" style={{ color: "#5a5a8a" }}>
+                  <div className="flex items-center gap-1" style={{ color: "var(--text-soft)" }}>
                     <MapPin size={10} />
-                    <span className="font-mono">{company.location ?? "-"}</span>
+                    <span className="font-medium">{company.location ?? "-"}</span>
                   </div>
                 </td>
 
@@ -124,22 +111,22 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                       href={company.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 font-mono"
-                      style={{ color: "#4d9fff" }}
+                      className="flex items-center gap-1 font-medium"
+                      style={{ color: "var(--brand)" }}
                     >
                       <Globe size={10} />
                       Visit
                     </a>
                   ) : (
-                    <span style={{ color: "#5a5a8a" }}>-</span>
+                    <span style={{ color: "var(--text-soft)" }}>-</span>
                   )}
                 </td>
 
-                <td className="px-4 py-3 font-mono" style={{ color: "#5a5a8a" }}>
+                <td className="px-4 py-3 font-medium text-muted">
                   {company.jobs?.length ?? 0} jobs
                 </td>
 
-                <td className="px-4 py-3 font-mono" style={{ color: "#5a5a8a" }}>
+                <td className="px-4 py-3 font-medium text-muted">
                   {new Date(company.created_at).toLocaleDateString()}
                 </td>
 
@@ -147,11 +134,7 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                   <button
                     onClick={() => deleteCompany(company.id)}
                     disabled={loading === company.id}
-                    className="p-1.5 rounded-lg"
-                    style={{
-                      background: "rgba(255,77,109,0.1)",
-                      color: "#ff4d6d",
-                    }}
+                    className="ui-button-danger p-1.5"
                     title="Delete company"
                   >
                     <Trash2 size={11} />

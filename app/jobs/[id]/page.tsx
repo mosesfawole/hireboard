@@ -30,9 +30,9 @@ function getTypeBadgeColor(type: string): string {
     PART_TIME: "#4d9fff",
     CONTRACT: "#a78bfa",
     REMOTE: "#f0c040",
-    INTERNSHIP: "#5a5a8a",
+    INTERNSHIP: "#94a3b8",
   };
-  return map[type] ?? "#5a5a8a";
+  return map[type] ?? "#94a3b8";
 }
 
 export default async function JobDetailPage({
@@ -55,21 +55,14 @@ export default async function JobDetailPage({
         {/* Back button */}
         <Link
           href="/jobs"
-          className="inline-flex items-center gap-1.5 text-xs font-mono transition-colors"
-          style={{ color: "#5a5a8a" }}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold transition-colors text-muted"
         >
           <ArrowLeft size={12} />
           Back to jobs
         </Link>
 
         {/* Job header card */}
-        <div
-          className="rounded-xl p-6 space-y-4"
-          style={{
-            background: "#0f0f20",
-            border: "1px solid #252540",
-          }}
-        >
+        <div className="surface-card-strong p-6 space-y-4">
           <div className="flex items-start gap-4">
             {/* Company logo */}
             <div
@@ -86,18 +79,15 @@ export default async function JobDetailPage({
                   unoptimized
                 />
               ) : (
-                <Building2 size={24} style={{ color: "#5a5a8a" }} />
+                <Building2 size={24} style={{ color: "var(--text-soft)" }} />
               )}
             </div>
 
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-display font-bold text-white">
+              <h1 className="text-xl font-display font-bold" style={{ color: "var(--text)" }}>
                 {job.title}
               </h1>
-              <p
-                className="text-sm font-mono mt-1"
-                style={{ color: "#5a5a8a" }}
-              >
+              <p className="text-sm font-medium mt-1 text-muted">
                 {company?.name}
               </p>
 
@@ -105,18 +95,18 @@ export default async function JobDetailPage({
               <div className="flex flex-wrap items-center gap-3 mt-3">
                 {/* Job type badge */}
                 <span
-                  className="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold"
+                  className="ui-badge"
                   style={{
                     background: `${getTypeBadgeColor(job.type)}18`,
                     color: getTypeBadgeColor(job.type),
+                    borderColor: `${getTypeBadgeColor(job.type)}26`,
                   }}
                 >
                   {formatType(job.type)}
                 </span>
 
                 <div
-                  className="flex items-center gap-1 text-xs font-mono"
-                  style={{ color: "#5a5a8a" }}
+                  className="flex items-center gap-1 text-xs font-medium text-muted"
                 >
                   <MapPin size={11} />
                   {job.location}
@@ -124,8 +114,7 @@ export default async function JobDetailPage({
 
                 {job.salary && (
                   <div
-                    className="flex items-center gap-1 text-xs font-mono"
-                    style={{ color: "#5a5a8a" }}
+                    className="flex items-center gap-1 text-xs font-medium text-muted"
                   >
                     <DollarSign size={11} />
                     {job.salary}
@@ -140,8 +129,7 @@ export default async function JobDetailPage({
             href={job.apply_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold transition-all"
-            style={{ background: "#4d9fff", color: "#ffffff" }}
+            className="ui-button flex items-center justify-center gap-2 w-full py-3.5 text-sm font-bold transition-all"
           >
             Apply for this Position
             <ExternalLink size={14} />
@@ -149,19 +137,13 @@ export default async function JobDetailPage({
         </div>
 
         {/* Job description */}
-        <div
-          className="rounded-xl p-6"
-          style={{
-            background: "#0f0f20",
-            border: "1px solid #252540",
-          }}
-        >
-          <h2 className="text-sm font-display font-bold text-white mb-4">
+        <div className="surface-card p-6">
+          <h2 className="text-sm font-display font-bold mb-4" style={{ color: "var(--text)" }}>
             Job Description
           </h2>
           <div
-            className="text-sm font-mono leading-relaxed whitespace-pre-wrap"
-            style={{ color: "#a0a0c4" }}
+            className="text-sm leading-relaxed whitespace-pre-wrap"
+            style={{ color: "var(--text-soft)" }}
           >
             {job.description}
           </div>
@@ -169,20 +151,14 @@ export default async function JobDetailPage({
 
         {/* Company info */}
         {company && (
-          <div
-            className="rounded-xl p-6 space-y-3"
-            style={{
-              background: "#0f0f20",
-              border: "1px solid #252540",
-            }}
-          >
-            <h2 className="text-sm font-display font-bold text-white">
+          <div className="surface-card p-6 space-y-3">
+            <h2 className="text-sm font-display font-bold" style={{ color: "var(--text)" }}>
               About {company.name}
             </h2>
             {company.description && (
               <p
-                className="text-sm font-mono leading-relaxed"
-                style={{ color: "#a0a0c4" }}
+                className="text-sm leading-relaxed"
+                style={{ color: "var(--text-soft)" }}
               >
                 {company.description}
               </p>
@@ -190,8 +166,8 @@ export default async function JobDetailPage({
             <div className="flex flex-wrap gap-4">
               {company.location && (
                 <div
-                  className="flex items-center gap-1.5 text-xs font-mono"
-                  style={{ color: "#5a5a8a" }}
+                  className="flex items-center gap-1.5 text-xs font-medium"
+                  style={{ color: "var(--text-soft)" }}
                 >
                   <MapPin size={11} />
                   {company.location}
@@ -202,8 +178,8 @@ export default async function JobDetailPage({
                   href={company.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs font-mono"
-                  style={{ color: "#4d9fff" }}
+                  className="flex items-center gap-1.5 text-xs font-semibold"
+                  style={{ color: "var(--brand)" }}
                 >
                   <ExternalLink size={11} />
                   {company.website}
