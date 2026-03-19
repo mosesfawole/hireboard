@@ -101,10 +101,6 @@ body {
   font-family: var(--font-display) !important;
 }
 
-.font-mono {
-  font-family: var(--font-sans) !important;
-}
-
 h1,
 h2,
 h3,

@@ -2,7 +2,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Clock, DollarSign, Building2 } from "lucide-react";
-import { useJobStore } from "@/store/useJobStore";
 import Badge, { getJobTypeBadge, formatJobType } from "@/components/ui/Badge";
 import type { Job } from "@/types";
 
@@ -11,7 +10,6 @@ interface Props {
 }
 
 export default function JobCard({ job }: Props) {
-  const { isDark } = useJobStore();
   const company = job.company;
   const postedAt = formatTimeAgo(job.created_at);
 
@@ -21,9 +19,7 @@ export default function JobCard({ job }: Props) {
       className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-1"
       style={{
         background: job.featured
-          ? isDark
-            ? "rgba(77,159,255,0.05)"
-            : "rgba(77,159,255,0.03)"
+          ? "rgba(59, 130, 246, 0.08)"
           : "var(--panel)",
         border: `1px solid ${
           job.featured
