@@ -2,7 +2,6 @@ import { getJobById } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
-import Badge, { getJobTypeBadge, formatJobType } from "@/components/ui/Badge";
 import {
   MapPin,
   DollarSign,
@@ -12,6 +11,29 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+
+// These are plain functions — no "use client" needed
+function formatType(type: string): string {
+  const map: Record<string, string> = {
+    FULL_TIME: "Full Time",
+    PART_TIME: "Part Time",
+    CONTRACT: "Contract",
+    REMOTE: "Remote",
+    INTERNSHIP: "Internship",
+  };
+  return map[type] ?? type;
+}
+
+function getTypeBadgeColor(type: string): string {
+  const map: Record<string, string> = {
+    FULL_TIME: "#00d4aa",
+    PART_TIME: "#4d9fff",
+    CONTRACT: "#a78bfa",
+    REMOTE: "#f0c040",
+    INTERNSHIP: "#5a5a8a",
+  };
+  return map[type] ?? "#5a5a8a";
+}
 
 export default async function JobDetailPage({
   params,
@@ -30,6 +52,7 @@ export default async function JobDetailPage({
       <Navbar />
 
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-8 space-y-6">
+        {/* Back button */}
         <Link
           href="/jobs"
           className="inline-flex items-center gap-1.5 text-xs font-mono transition-colors"
@@ -39,6 +62,7 @@ export default async function JobDetailPage({
           Back to jobs
         </Link>
 
+        {/* Job header card */}
         <div
           className="rounded-xl p-6 space-y-4"
           style={{
@@ -47,6 +71,7 @@ export default async function JobDetailPage({
           }}
         >
           <div className="flex items-start gap-4">
+            {/* Company logo */}
             <div
               className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center shrink-0"
               style={{ background: "#1a1a30" }}
@@ -69,15 +94,26 @@ export default async function JobDetailPage({
               <h1 className="text-xl font-display font-bold text-white">
                 {job.title}
               </h1>
-              <p className="text-sm font-mono mt-1" style={{ color: "#5a5a8a" }}>
+              <p
+                className="text-sm font-mono mt-1"
+                style={{ color: "#5a5a8a" }}
+              >
                 {company?.name}
               </p>
 
+              {/* Meta */}
               <div className="flex flex-wrap items-center gap-3 mt-3">
-                <Badge
-                  label={formatJobType(job.type)}
-                  variant={getJobTypeBadge(job.type)}
-                />
+                {/* Job type badge */}
+                <span
+                  className="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold"
+                  style={{
+                    background: `${getTypeBadgeColor(job.type)}18`,
+                    color: getTypeBadgeColor(job.type),
+                  }}
+                >
+                  {formatType(job.type)}
+                </span>
+
                 <div
                   className="flex items-center gap-1 text-xs font-mono"
                   style={{ color: "#5a5a8a" }}
@@ -85,6 +121,7 @@ export default async function JobDetailPage({
                   <MapPin size={11} />
                   {job.location}
                 </div>
+
                 {job.salary && (
                   <div
                     className="flex items-center gap-1 text-xs font-mono"
@@ -98,7 +135,8 @@ export default async function JobDetailPage({
             </div>
           </div>
 
-          <a
+          {/* Apply button */}
+          <Link
             href={job.apply_url}
             target="_blank"
             rel="noopener noreferrer"
@@ -107,9 +145,10 @@ export default async function JobDetailPage({
           >
             Apply for this Position
             <ExternalLink size={14} />
-          </a>
+          </Link>
         </div>
 
+        {/* Job description */}
         <div
           className="rounded-xl p-6"
           style={{
@@ -128,6 +167,7 @@ export default async function JobDetailPage({
           </div>
         </div>
 
+        {/* Company info */}
         {company && (
           <div
             className="rounded-xl p-6 space-y-3"
@@ -158,7 +198,7 @@ export default async function JobDetailPage({
                 </div>
               )}
               {company.website && (
-                <a
+                <Link
                   href={company.website}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -167,7 +207,7 @@ export default async function JobDetailPage({
                 >
                   <ExternalLink size={11} />
                   {company.website}
-                </a>
+                </Link>
               )}
             </div>
           </div>
