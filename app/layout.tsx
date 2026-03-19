@@ -1,20 +1,7 @@
 import type { Metadata } from "next";
-import { Poppins, Space_Grotesk } from "next/font/google";
 import SessionProvider from "@/components/providers/SessionProvider";
 
 import "./globals.css";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: "HireBoard - Find Your Next Opportunity",
@@ -45,7 +32,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${poppins.variable} ${spaceGrotesk.variable} min-h-screen`}>
+      <body className="min-h-screen">
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>

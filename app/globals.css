@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --font-sans: "Poppins", sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
+  --font-sans:
+    "Poppins", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display:
+    "Poppins", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --bg: #f5f7fb;
   --bg-soft: rgba(255, 255, 255, 0.8);
   --panel: rgba(255, 255, 255, 0.88);

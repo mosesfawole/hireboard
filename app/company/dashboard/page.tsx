@@ -1,19 +1,20 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+
+import { Suspense, useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import Badge, {
+  formatJobType,
   getJobTypeBadge,
   getStatusBadge,
-  formatJobType,
 } from "@/components/ui/Badge";
-import { Plus, Trash2, Briefcase } from "lucide-react";
+import { Briefcase, Plus, Trash2 } from "lucide-react";
 import type { Job } from "@/types";
 
-export default function CompanyDashboardPage() {
+function CompanyDashboardContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -24,10 +25,11 @@ export default function CompanyDashboardPage() {
 
   const fetchJobs = useCallback(async () => {
     if (!companyId) return;
+
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/jobs?companyId=${companyId}`);
-      const data = await res.json();
+      const response = await fetch(`/api/jobs?companyId=${companyId}`);
+      const data = await response.json();
       setJobs(Array.isArray(data) ? data : []);
     } finally {
       setIsLoading(false);
@@ -75,8 +77,8 @@ export default function CompanyDashboardPage() {
 
         {isLoading ? (
           <div className="space-y-3">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="surface-card h-20 animate-pulse" />
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="surface-card h-20 animate-pulse" />
             ))}
           </div>
         ) : jobs.length === 0 ? (
@@ -108,10 +110,7 @@ export default function CompanyDashboardPage() {
                       label={formatJobType(job.type)}
                       variant={getJobTypeBadge(job.type)}
                     />
-                    <Badge
-                      label={job.status}
-                      variant={getStatusBadge(job.status)}
-                    />
+                    <Badge label={job.status} variant={getStatusBadge(job.status)} />
                     <span className="text-[11px] font-medium text-muted">
                       {job.location}
                     </span>
@@ -131,5 +130,15 @@ export default function CompanyDashboardPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function CompanyDashboardPage() {
+  return (
+    <Suspense
+      fallback={<div className="min-h-screen" style={{ background: "transparent" }} />}
+    >
+      <CompanyDashboardContent />
+    </Suspense>
   );
 }
