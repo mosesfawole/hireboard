@@ -67,11 +67,16 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const message = getErrorMessage(error, "Registration failed");
     console.error("[POST /api/companies]", message);
+    const normalized = message.toLowerCase();
 
     return NextResponse.json(
       {
-        error: message.includes("row-level security")
+        error: normalized.includes("row-level security")
           ? "Registration is blocked by Supabase permissions. Add SUPABASE_SERVICE_ROLE_KEY to your server env or allow inserts for registration."
+          : normalized.includes("enotfound") ||
+              normalized.includes("getaddrinfo") ||
+              normalized.includes("fetch failed")
+            ? "The server could not reach your Supabase project. Check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local, then confirm the Supabase project is still active."
           : message,
       },
       { status: 500 },

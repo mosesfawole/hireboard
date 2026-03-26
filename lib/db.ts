@@ -9,6 +9,31 @@ import type {
 } from "@/types";
 import bcrypt from "bcryptjs";
 
+function formatSupabaseError(error: {
+  message: string;
+  details?: string | null;
+  hint?: string | null;
+  code?: string;
+}): string {
+  return [
+    error.message,
+    error.details,
+    error.hint,
+    error.code ? `code: ${error.code}` : null,
+  ]
+    .filter(Boolean)
+    .join(" | ");
+}
+
+function throwSupabaseError(error: {
+  message: string;
+  details?: string | null;
+  hint?: string | null;
+  code?: string;
+}): never {
+  throw new Error(formatSupabaseError(error));
+}
+
 // ── User queries ───────────────────────────────────────────────────
 
 // Find a user by their email address
@@ -41,7 +66,7 @@ export async function createUser(
     .single();
 
   if (error) {
-    throw new Error(error.message);
+    throwSupabaseError(error);
   }
 
   if (!data) {
@@ -72,7 +97,7 @@ export async function createCompany(
     .single();
 
   if (error) {
-    throw new Error(error.message);
+    throwSupabaseError(error);
   }
 
   if (!data) {
@@ -165,7 +190,7 @@ export async function createJob(input: CreateJobInput): Promise<Job | null> {
     .single();
 
   if (error) {
-    throw new Error(error.message);
+    throwSupabaseError(error);
   }
 
   if (!data) {
