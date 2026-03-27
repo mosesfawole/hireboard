@@ -61,7 +61,7 @@ export default function JobsTable({ jobs, onRefresh }: Props) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-xs min-w-[700px]">
+        <table className="data-table w-full text-xs min-w-[700px]">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--panel-border)" }}>
               {["Job", "Company", "Type", "Status", "Posted", "Actions"].map((heading) => (
@@ -76,17 +76,7 @@ export default function JobsTable({ jobs, onRefresh }: Props) {
           </thead>
           <tbody>
             {jobs.map((job) => (
-              <tr
-                key={job.id}
-                className="transition-colors"
-                style={{ borderBottom: "1px solid var(--panel-border)" }}
-                onMouseEnter={(event) => {
-                  event.currentTarget.style.background = "var(--bg-soft)";
-                }}
-                onMouseLeave={(event) => {
-                  event.currentTarget.style.background = "transparent";
-                }}
-              >
+              <tr key={job.id} style={{ borderBottom: "1px solid var(--panel-border)" }}>
                 <td className="px-4 py-3" style={{ color: "var(--text)" }}>
                   <div className="max-w-[180px]">
                     <p className="font-semibold truncate">{job.title}</p>

@@ -11,7 +11,7 @@ import Badge, {
   getJobTypeBadge,
   getStatusBadge,
 } from "@/components/ui/Badge";
-import { Briefcase, Plus, Trash2 } from "lucide-react";
+import { Briefcase, Plus, Sparkles, Trash2 } from "lucide-react";
 import type { Job } from "@/types";
 
 function CompanyDashboardContent() {
@@ -50,24 +50,49 @@ function CompanyDashboardContent() {
     <div className="min-h-screen flex flex-col" style={{ background: "transparent" }}>
       <Navbar />
 
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-display font-bold" style={{ color: "var(--text)" }}>
-              Your Job Listings
-            </h1>
-            <p className="text-xs font-medium mt-0.5 text-muted">
-              Manage your posted positions
-            </p>
+      <main className="page-shell flex-1 space-y-6">
+        <section className="surface-card-strong hero-panel p-6 md:p-8">
+          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-3">
+              <span className="section-kicker">
+                <Sparkles size={12} />
+                Company dashboard
+              </span>
+              <div>
+                <h1
+                  className="text-3xl font-display font-bold tracking-tight"
+                  style={{ color: "var(--text)" }}
+                >
+                  Your job listings
+                </h1>
+                <p className="mt-2 text-sm leading-7 text-muted">
+                  Track active, pending, and rejected roles from one polished workspace.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="metric-card min-w-[180px]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+                  Total roles
+                </p>
+                <p
+                  className="mt-2 font-display text-3xl font-bold"
+                  style={{ color: "var(--text)" }}
+                >
+                  {jobs.length}
+                </p>
+              </div>
+              <Link
+                href="/company/post"
+                className="ui-button flex items-center gap-2 px-4 py-3 text-xs font-bold"
+              >
+                <Plus size={13} />
+                Post a Job
+              </Link>
+            </div>
           </div>
-          <Link
-            href="/company/post"
-            className="ui-button flex items-center gap-2 px-4 py-2.5 text-xs font-bold"
-          >
-            <Plus size={13} />
-            Post a Job
-          </Link>
-        </div>
+        </section>
 
         {justPosted && (
           <div className="ui-alert ui-alert-success text-xs font-medium">
@@ -82,38 +107,33 @@ function CompanyDashboardContent() {
             ))}
           </div>
         ) : jobs.length === 0 ? (
-          <div className="surface-card flex flex-col items-center justify-center py-16 gap-3">
+          <div className="surface-card flex flex-col items-center justify-center gap-3 py-16">
             <Briefcase size={24} style={{ color: "var(--text-soft)" }} />
             <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>
               No jobs posted yet
             </p>
-            <Link
-              href="/company/post"
-              className="ui-button px-4 py-2.5 text-xs font-bold"
-            >
+            <Link href="/company/post" className="ui-button px-4 py-2.5 text-xs font-bold">
               Post your first job
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid gap-3">
             {jobs.map((job) => (
               <div key={job.id} className="surface-card flex items-center gap-4 p-5">
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <p
-                    className="text-sm font-display font-bold truncate"
+                    className="truncate text-base font-display font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {job.title}
                   </p>
-                  <div className="flex items-center gap-2 mt-1.5">
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
                     <Badge
                       label={formatJobType(job.type)}
                       variant={getJobTypeBadge(job.type)}
                     />
                     <Badge label={job.status} variant={getStatusBadge(job.status)} />
-                    <span className="text-[11px] font-medium text-muted">
-                      {job.location}
-                    </span>
+                    <span className="text-[11px] font-medium text-muted">{job.location}</span>
                   </div>
                 </div>
                 <button

@@ -44,28 +44,50 @@ export default function AdminPage() {
     <div className="min-h-screen flex flex-col" style={{ background: "transparent" }}>
       <Navbar />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8 space-y-6">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-2xl flex items-center justify-center"
-            style={{
-              background: "rgba(139, 92, 246, 0.12)",
-              border: "1px solid rgba(139, 92, 246, 0.18)",
-            }}
-          >
-            <Shield size={15} style={{ color: "#8b5cf6" }} />
-          </div>
-          <div>
-            <h1 className="text-xl font-display font-bold" style={{ color: "var(--text)" }}>
-              Admin Dashboard
-            </h1>
-            <p className="text-xs font-medium text-muted">
-              Manage all jobs, companies and users
-            </p>
-          </div>
-        </div>
+      <main className="page-shell flex-1 space-y-6">
+        <section className="surface-card-strong hero-panel p-6 md:p-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-3">
+              <span className="section-kicker">
+                <Shield size={12} />
+                Admin control room
+              </span>
+              <div className="flex items-start gap-3">
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl"
+                  style={{
+                    background: "rgba(139, 92, 246, 0.12)",
+                    border: "1px solid rgba(139, 92, 246, 0.18)",
+                  }}
+                >
+                  <Shield size={18} style={{ color: "#b37bff" }} />
+                </div>
+                <div>
+                  <h1
+                    className="text-3xl font-display font-bold tracking-tight"
+                    style={{ color: "var(--text)" }}
+                  >
+                    Admin Dashboard
+                  </h1>
+                  <p className="mt-2 text-sm leading-7 text-muted">
+                    Review listings, manage companies, and keep the marketplace high quality.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-        <div className="ui-tabs flex gap-1 p-1.5 w-fit">
+            <div className="metric-card min-w-[220px]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+                Workspace status
+              </p>
+              <p className="mt-2 text-sm font-semibold" style={{ color: "var(--text)" }}>
+                {isLoading ? "Refreshing metrics..." : "All management tools available"}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div className="ui-tabs flex w-fit gap-1 p-1.5">
           {tabs.map((tab) => (
             <button
               key={tab.key}
@@ -80,7 +102,7 @@ export default function AdminPage() {
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="surface-card h-24 animate-pulse" />
             ))}

@@ -45,7 +45,7 @@ export default function JobList({ jobs }: Props) {
   if (filtered.length === 0) {
     return (
       <div
-        className="surface-card flex flex-col items-center justify-center py-16 gap-3"
+        className="surface-card flex flex-col items-center justify-center gap-3 py-16"
       >
         <div
           className="w-12 h-12 rounded-full flex items-center justify-center"
@@ -64,10 +64,18 @@ export default function JobList({ jobs }: Props) {
   }
 
   return (
-    <div className="space-y-3">
-      <p className="text-xs font-medium text-muted">
-        {filtered.length} {filtered.length === 1 ? "job" : "jobs"} found
-      </p>
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+            Results
+          </p>
+          <p className="mt-1 text-sm font-medium" style={{ color: "var(--text)" }}>
+            {filtered.length} {filtered.length === 1 ? "job" : "jobs"} matched your filters
+          </p>
+        </div>
+        <div className="section-kicker">Best match first</div>
+      </div>
       {filtered.map((job) => (
         <JobCard key={job.id} job={job} />
       ))}

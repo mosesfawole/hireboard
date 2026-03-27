@@ -44,7 +44,7 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-xs min-w-[500px]">
+        <table className="data-table w-full text-xs min-w-[500px]">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--panel-border)" }}>
               {["Company", "Location", "Website", "Jobs Posted", "Joined", "Actions"].map(
@@ -61,16 +61,7 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
           </thead>
           <tbody>
             {companies.map((company) => (
-              <tr
-                key={company.id}
-                style={{ borderBottom: "1px solid var(--panel-border)" }}
-                onMouseEnter={(event) => {
-                  event.currentTarget.style.background = "var(--bg-soft)";
-                }}
-                onMouseLeave={(event) => {
-                  event.currentTarget.style.background = "transparent";
-                }}
-              >
+              <tr key={company.id} style={{ borderBottom: "1px solid var(--panel-border)" }}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2.5">
                     <div

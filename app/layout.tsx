@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
+import { Manrope, Space_Grotesk } from "next/font/google";
 import SessionProvider from "@/components/providers/SessionProvider";
 
 import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
   title: "HireBoard - Find Your Next Opportunity",
@@ -32,7 +43,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen">
+      <body className={`${manrope.variable} ${spaceGrotesk.variable} min-h-screen`}>
+        <div className="app-backdrop" aria-hidden="true">
+          <div className="mesh-orb mesh-orb-one" />
+          <div className="mesh-orb mesh-orb-two" />
+          <div className="mesh-grid" />
+        </div>
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>

@@ -60,22 +60,30 @@ export default function StatsCards({ stats }: Props) {
           key={card.label}
           className="surface-card p-4"
           style={{
-            borderBottom: `2px solid ${card.accent}`,
+            borderTop: `2px solid ${card.accent}`,
           }}
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-4">
             <p
               className="text-[10px] font-semibold tracking-[0.18em] uppercase text-muted"
             >
               {card.label}
             </p>
-            <span style={{ color: card.accent }}>{card.icon}</span>
+            <span
+              className="flex h-9 w-9 items-center justify-center rounded-2xl"
+              style={{ color: card.accent, background: `${card.accent}16` }}
+            >
+              {card.icon}
+            </span>
           </div>
           <p
-            className="text-2xl font-display font-bold"
+            className="text-3xl font-display font-bold"
             style={{ color: "var(--text)" }}
           >
             {card.value}
+          </p>
+          <p className="mt-2 text-xs font-medium text-muted">
+            Live snapshot from your marketplace
           </p>
         </div>
       ))}

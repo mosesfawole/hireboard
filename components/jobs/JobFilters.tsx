@@ -1,5 +1,5 @@
 "use client";
-import { Search, X } from "lucide-react";
+import { MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 import { useJobStore } from "@/store/useJobStore";
 
 const CATEGORIES = [
@@ -30,37 +30,49 @@ export default function JobFilters() {
 
   return (
     <div className="space-y-3">
-      {/* Search input */}
-      <div className="relative">
-        <Search
-          size={13}
-          className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-          style={{ color: "var(--text-soft)" }}
-        />
-        <input
-          type="text"
-          placeholder="Search jobs, companies..."
-          value={filters.search}
-          onChange={(e) => setFilter("search", e.target.value)}
-          className="ui-input w-full pl-10 pr-10 py-3 text-sm"
-        />
-        {filters.search && (
-          <button
-            onClick={() => setFilter("search", "")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted"
-          >
-            <X size={13} />
-          </button>
-        )}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+            Refine results
+          </p>
+          <p className="mt-1 text-sm" style={{ color: "var(--text)" }}>
+            Search by role, category, type, or location.
+          </p>
+        </div>
+        <div className="section-kicker">
+          <SlidersHorizontal size={12} />
+          Smart filters
+        </div>
       </div>
 
-      {/* Filter row */}
-      <div className="flex flex-wrap gap-2">
-        {/* Category select */}
+      <div className="grid gap-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
+        <div className="relative lg:col-span-1">
+          <Search
+            size={14}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2"
+            style={{ color: "var(--text-soft)" }}
+          />
+          <input
+            type="text"
+            placeholder="Search jobs, companies..."
+            value={filters.search}
+            onChange={(e) => setFilter("search", e.target.value)}
+            className="ui-input w-full py-3 pl-11 pr-10 text-sm"
+          />
+          {filters.search && (
+            <button
+              onClick={() => setFilter("search", "")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted"
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+
         <select
           value={filters.category}
           onChange={(e) => setFilter("category", e.target.value)}
-          className="ui-input flex-1 min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
+          className="ui-input min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
         >
           <option value="">All Categories</option>
           {CATEGORIES.map((c) => (
@@ -70,11 +82,10 @@ export default function JobFilters() {
           ))}
         </select>
 
-        {/* Job type select */}
         <select
           value={filters.type}
           onChange={(e) => setFilter("type", e.target.value)}
-          className="ui-input flex-1 min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
+          className="ui-input min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
         >
           <option value="">All Types</option>
           {JOB_TYPES.map((t) => (
@@ -84,20 +95,25 @@ export default function JobFilters() {
           ))}
         </select>
 
-        {/* Location input */}
-        <input
-          type="text"
-          placeholder="Location..."
-          value={filters.location}
-          onChange={(e) => setFilter("location", e.target.value)}
-          className="ui-input flex-1 min-w-[140px] px-4 py-3 text-sm"
-        />
+        <div className="relative">
+          <MapPin
+            size={14}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2"
+            style={{ color: "var(--text-soft)" }}
+          />
+          <input
+            type="text"
+            placeholder="Location..."
+            value={filters.location}
+            onChange={(e) => setFilter("location", e.target.value)}
+            className="ui-input min-w-[140px] py-3 pl-11 pr-4 text-sm"
+          />
+        </div>
 
-        {/* Clear filters */}
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="ui-button-danger flex items-center gap-1.5 px-4 py-3 text-xs font-semibold transition-colors"
+            className="ui-button-danger flex items-center justify-center gap-1.5 px-4 py-3 text-xs font-semibold transition-colors"
           >
             <X size={11} />
             Clear

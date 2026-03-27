@@ -10,6 +10,7 @@ import {
   LogOut,
   LayoutDashboard,
   Shield,
+  Sparkles,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -17,111 +18,125 @@ export default function Navbar() {
   const { isDark, toggleTheme } = useJobStore();
   const role = session?.user?.role;
 
-  // Apply saved theme on mount
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);
 
   return (
-    <nav
-      className="surface-subtle h-16 flex items-center px-4 md:px-8 gap-4 sticky top-0 z-30"
-      style={{
-        borderBottom: "1px solid var(--panel-border)",
-      }}
-    >
-      {/* Logo */}
-      <Link href="/jobs" className="flex items-center gap-2 shrink-0">
-        <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center"
-          style={{
-            background: "rgba(77,159,255,0.1)",
-            border: "1px solid rgba(77,159,255,0.25)",
-          }}
-        >
-          <Briefcase size={14} style={{ color: "#4d9fff" }} />
-        </div>
-        <span
-          className="font-display font-bold tracking-tight text-sm"
-          style={{ color: "var(--text)" }}
-        >
-          Hire<span style={{ color: "var(--brand)" }}>Board</span>
-        </span>
-      </Link>
-
-      {/* Right side */}
-      <div className="ml-auto flex items-center gap-3">
-        {/* Admin link */}
-        {role === "ADMIN" && (
-          <Link
-            href="/admin"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold transition-colors"
-            style={{ color: "#a78bfa" }}
+    <nav className="sticky top-0 z-30 px-3 pt-3 md:px-6">
+      <div className="surface-card mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 md:px-5">
+        <Link href="/jobs" className="flex shrink-0 items-center gap-3">
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-2xl"
+            style={{
+              background:
+                "linear-gradient(135deg, var(--brand-soft), rgba(24, 74, 69, 0.12))",
+              border: "1px solid var(--panel-border)",
+            }}
           >
-            <Shield size={12} />
-            Admin
-          </Link>
-        )}
-
-        {/* Company dashboard link */}
-        {role === "COMPANY" && (
-          <Link
-            href="/company/dashboard"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold transition-colors"
-            style={{ color: "var(--brand)" }}
-          >
-            <LayoutDashboard size={12} />
-            Dashboard
-          </Link>
-        )}
-
-        {/* Post a job button */}
-        {role === "COMPANY" && (
-          <Link
-            href="/company/post"
-            className="ui-button hidden sm:flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-all"
-          >
-            Post a Job
-          </Link>
-        )}
-
-        {/* Login / logout */}
-        {session ? (
-          <button
-            onClick={() => signOut({ callbackUrl: "/jobs" })}
-            className="flex items-center gap-1.5 text-xs font-semibold transition-colors text-muted"
-          >
-            <LogOut size={12} />
-            <span className="hidden sm:block">Sign out</span>
-          </button>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Link
-              href="/auth/login"
-              className="text-xs font-semibold transition-colors"
+            <Briefcase size={18} style={{ color: "var(--brand)" }} />
+          </div>
+          <div className="leading-none">
+            <span
+              className="font-display block text-base font-bold tracking-tight"
               style={{ color: "var(--text)" }}
             >
-              Login
+              HireBoard
+            </span>
+            <span className="text-[11px] font-semibold text-muted">
+              Premium hiring workflow
+            </span>
+          </div>
+        </Link>
+
+        <div className="ml-4 hidden items-center gap-2 md:flex">
+          <Link
+            href="/jobs"
+            className="ui-button-secondary px-4 py-2 text-xs font-semibold"
+          >
+            Browse Jobs
+          </Link>
+
+          {role === "ADMIN" && (
+            <Link
+              href="/admin"
+              className="ui-button-secondary flex items-center gap-1.5 px-4 py-2 text-xs font-semibold"
+              style={{ color: "#b37bff" }}
+            >
+              <Shield size={12} />
+              Admin
             </Link>
+          )}
+
+          {role === "COMPANY" && (
+            <Link
+              href="/company/dashboard"
+              className="ui-button-secondary flex items-center gap-1.5 px-4 py-2 text-xs font-semibold"
+              style={{ color: "var(--hero-accent)" }}
+            >
+              <LayoutDashboard size={12} />
+              Dashboard
+            </Link>
+          )}
+
+          {!session && (
             <Link
               href="/auth/register"
-              className="ui-button px-4 py-2 text-xs font-bold"
+              className="ui-button-secondary flex items-center gap-1.5 px-4 py-2 text-xs font-semibold"
+            >
+              <Sparkles size={12} />
+              For Employers
+            </Link>
+          )}
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          {role === "COMPANY" && (
+            <Link
+              href="/company/post"
+              className="ui-button hidden items-center gap-1.5 px-4 py-2.5 text-xs font-bold sm:flex"
             >
               Post a Job
             </Link>
-          </div>
-        )}
-
-        {/* Theme toggle */}
-        <button
-          onClick={toggleTheme}
-          className="ui-button-secondary p-2.5 transition-all"
-        >
-          {isDark ? (
-            <Sun size={13} style={{ color: "var(--warning)" }} />
-          ) : (
-            <Moon size={13} style={{ color: "var(--brand)" }} />
           )}
-        </button>
+
+          {session ? (
+            <button
+              onClick={() => signOut({ callbackUrl: "/jobs" })}
+              className="ui-button-secondary flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold"
+            >
+              <LogOut size={12} />
+              <span className="hidden sm:block">Sign out</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/auth/login"
+                className="ui-button-secondary px-3.5 py-2.5 text-xs font-semibold"
+              >
+                Login
+              </Link>
+              <Link
+                href="/auth/register"
+                className="ui-button px-4 py-2.5 text-xs font-bold"
+              >
+                Post a Job
+              </Link>
+            </div>
+          )}
+
+          <button
+            onClick={toggleTheme}
+            className="ui-button-secondary p-2.5 transition-all"
+            aria-label="Toggle theme"
+          >
+            {isDark ? (
+              <Sun size={13} style={{ color: "var(--warning)" }} />
+            ) : (
+              <Moon size={13} style={{ color: "var(--brand)" }} />
+            )}
+          </button>
+        </div>
       </div>
     </nav>
   );
