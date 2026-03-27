@@ -1,18 +1,14 @@
 "use client";
+import {
+  formatJobType,
+  getJobTypeBadge,
+  getStatusBadge,
+  type BadgeVariant,
+} from "@/lib/job-ui";
 
 interface BadgeProps {
   label: string;
-  variant:
-    | "green"
-    | "blue"
-    | "purple"
-    | "gold"
-    | "red"
-    | "muted"
-    | "pending"
-    | "active"
-    | "rejected"
-    | "closed";
+  variant: BadgeVariant;
 }
 
 // Maps each variant to its color values
@@ -29,41 +25,6 @@ const variants: Record<BadgeProps["variant"], { bg: string; color: string }> = {
   closed: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" },
 };
 
-// Maps job type strings to badge variants
-export function getJobTypeBadge(type: string): BadgeProps["variant"] {
-  const map: Record<string, BadgeProps["variant"]> = {
-    FULL_TIME: "green",
-    PART_TIME: "blue",
-    CONTRACT: "purple",
-    REMOTE: "gold",
-    INTERNSHIP: "muted",
-  };
-  return map[type] ?? "muted";
-}
-
-// Maps job status strings to badge variants
-export function getStatusBadge(status: string): BadgeProps["variant"] {
-  const map: Record<string, BadgeProps["variant"]> = {
-    PENDING: "pending",
-    ACTIVE: "active",
-    REJECTED: "rejected",
-    CLOSED: "closed",
-  };
-  return map[status] ?? "muted";
-}
-
-// Formats job type for display
-export function formatJobType(type: string): string {
-  const map: Record<string, string> = {
-    FULL_TIME: "Full Time",
-    PART_TIME: "Part Time",
-    CONTRACT: "Contract",
-    REMOTE: "Remote",
-    INTERNSHIP: "Internship",
-  };
-  return map[type] ?? type;
-}
-
 export default function Badge({ label, variant }: BadgeProps) {
   const { bg, color } = variants[variant];
   return (
@@ -75,3 +36,5 @@ export default function Badge({ label, variant }: BadgeProps) {
     </span>
   );
 }
+
+export { formatJobType, getJobTypeBadge, getStatusBadge };

@@ -1,7 +1,13 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, MapPin, Clock3, DollarSign, Building2 } from "lucide-react";
+import {
+  ArrowUpRight,
+  MapPin,
+  Clock3,
+  DollarSign,
+  Building2,
+} from "lucide-react";
 import Badge, { getJobTypeBadge, formatJobType } from "@/components/ui/Badge";
 import type { Job } from "@/types";
 
@@ -16,15 +22,13 @@ export default function JobCard({ job }: Props) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-1"
+      className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-1 mx-4"
       style={{
         background: job.featured
           ? "linear-gradient(135deg, var(--brand-soft), rgba(24, 74, 69, 0.06))"
           : "var(--panel)",
         border: `1px solid ${
-          job.featured
-            ? "rgba(217, 108, 63, 0.22)"
-            : "var(--panel-border)"
+          job.featured ? "rgba(217, 108, 63, 0.22)" : "var(--panel-border)"
         }`,
         boxShadow: job.featured
           ? "0 24px 50px rgba(185, 74, 34, 0.12)"
@@ -48,7 +52,7 @@ export default function JobCard({ job }: Props) {
 
       <div className="flex items-start gap-4">
         <div
-          className="flex h-13 w-13 shrink-0 items-center justify-center overflow-hidden rounded-2xl"
+          className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl"
           style={{ background: "var(--surface-2)" }}
         >
           {company?.logo ? (
@@ -79,7 +83,10 @@ export default function JobCard({ job }: Props) {
               </p>
             </div>
 
-            <div className="hidden items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold text-muted md:flex" style={{ background: "var(--bg-soft)" }}>
+            <div
+              className="hidden items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold text-muted md:flex"
+              style={{ background: "var(--bg-soft)" }}
+            >
               <Clock3 size={11} />
               {postedAt}
             </div>
@@ -110,8 +117,13 @@ export default function JobCard({ job }: Props) {
           </div>
 
           <div className="mt-4 flex items-center justify-between">
-            <span className="text-xs font-medium text-muted md:hidden">{postedAt}</span>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "var(--brand)" }}>
+            <span className="text-xs font-medium text-muted md:hidden">
+              {postedAt}
+            </span>
+            <span
+              className="inline-flex items-center gap-1 text-xs font-semibold"
+              style={{ color: "var(--brand)" }}
+            >
               View role
               <ArrowUpRight size={12} />
             </span>

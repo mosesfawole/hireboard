@@ -44,9 +44,7 @@ export default function JobList({ jobs }: Props) {
 
   if (filtered.length === 0) {
     return (
-      <div
-        className="surface-card flex flex-col items-center justify-center gap-3 py-16"
-      >
+      <div className="surface-card flex flex-col items-center justify-center gap-3 px-10 py-16">
         <div
           className="w-12 h-12 rounded-full flex items-center justify-center"
           style={{ background: "var(--surface-2)" }}
@@ -65,13 +63,17 @@ export default function JobList({ jobs }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 mx-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
             Results
           </p>
-          <p className="mt-1 text-sm font-medium" style={{ color: "var(--text)" }}>
-            {filtered.length} {filtered.length === 1 ? "job" : "jobs"} matched your filters
+          <p
+            className="mt-1 text-sm font-medium"
+            style={{ color: "var(--text)" }}
+          >
+            {filtered.length} {filtered.length === 1 ? "job" : "jobs"} matched
+            your filters
           </p>
         </div>
         <div className="section-kicker">Best match first</div>

@@ -1,8 +1,9 @@
 import { getJobById } from "@/lib/db";
+import { formatJobType, getJobTypeBadge } from "@/lib/job-ui";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
-import Badge, { formatJobType, getJobTypeBadge } from "@/components/ui/Badge";
+import Badge from "@/components/ui/Badge";
 import {
   MapPin,
   DollarSign,
