@@ -105,7 +105,7 @@ export default function JobCard({ job }: Props) {
 
             {job.salary && (
               <div className="flex items-center gap-1 text-[11px] font-medium text-muted">
-                <DollarSign size={10} />
+                {/* <DollarSign size={10} /> */}
                 {job.salary}
               </div>
             )}
