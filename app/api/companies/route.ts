@@ -2,23 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmail, createUser, createCompany } from "@/lib/db";
 import { getErrorMessage } from "@/lib/errors";
 
-// POST /api/companies — register a new company account
-// Creates a user + company profile together
 export async function POST(req: NextRequest) {
   try {
     const { email, password, companyName, website, location, description } =
       await req.json();
 
-    // Validate required fields
-    if (!email || !password || !companyName) {
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const normalizedPassword = typeof password === "string" ? password.trim() : "";
+    const normalizedCompanyName =
+      typeof companyName === "string" ? companyName.trim() : "";
+    const normalizedWebsite = typeof website === "string" ? website.trim() : undefined;
+    const normalizedLocation =
+      typeof location === "string" ? location.trim() : undefined;
+    const normalizedDescription =
+      typeof description === "string" ? description.trim() : undefined;
+
+    if (!normalizedEmail || !normalizedPassword || !normalizedCompanyName) {
       return NextResponse.json(
         { error: "Email, password and company name are required" },
         { status: 400 },
       );
     }
 
-    // Check email isn't already registered
-    const existing = await getUserByEmail(email);
+    const existing = await getUserByEmail(normalizedEmail);
     if (existing) {
       return NextResponse.json(
         { error: "An account with this email already exists" },
@@ -26,16 +32,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Password strength check
-    if (password.length < 8) {
+    if (normalizedPassword.length < 8) {
       return NextResponse.json(
         { error: "Password must be at least 8 characters" },
         { status: 400 },
       );
     }
 
-    // Create the user account first
-    const user = await createUser(email, password);
+    const user = await createUser(normalizedEmail, normalizedPassword);
 
     if (!user) {
       return NextResponse.json(
@@ -44,12 +48,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Then create their company profile
     const company = await createCompany({
-      name: companyName,
-      website,
-      location,
-      description,
+      name: normalizedCompanyName,
+      website: normalizedWebsite,
+      location: normalizedLocation,
+      description: normalizedDescription,
       user_id: user.id,
     });
 
@@ -67,10 +70,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const message = getErrorMessage(error, "Registration failed");
     console.error("[POST /api/companies]", message);
-
-    return NextResponse.json(
-      { error: message },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

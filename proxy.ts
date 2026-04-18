@@ -1,20 +1,17 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-export default auth((req) => {
+export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  const companyRoutes = ["/company/dashboard", "/company/post"];
-  const adminRoutes = ["/admin"];
-
-  if (companyRoutes.some((route) => pathname.startsWith(route))) {
-    if (!session) {
+  if (pathname.startsWith("/company")) {
+    if (!session || session.user.role !== "COMPANY") {
       return NextResponse.redirect(new URL("/auth/login", req.url));
     }
   }
 
-  if (adminRoutes.some((route) => pathname.startsWith(route))) {
+  if (pathname.startsWith("/admin")) {
     if (!session || session.user.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/auth/login", req.url));
     }
@@ -24,5 +21,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth).*)"],
+  matcher: ["/admin/:path*", "/company/:path*"],
 };

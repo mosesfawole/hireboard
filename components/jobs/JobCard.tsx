@@ -1,14 +1,9 @@
 "use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ArrowUpRight,
-  MapPin,
-  Clock3,
-  DollarSign,
-  Building2,
-} from "lucide-react";
-import Badge, { getJobTypeBadge, formatJobType } from "@/components/ui/Badge";
+import { ArrowUpRight, Building2, Clock3, MapPin } from "lucide-react";
+import Badge, { formatJobType, getJobTypeBadge } from "@/components/ui/Badge";
 import type { Job } from "@/types";
 
 interface Props {
@@ -22,7 +17,7 @@ export default function JobCard({ job }: Props) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-1 mx-4"
+      className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-1"
       style={{
         background: job.featured
           ? "linear-gradient(135deg, var(--brand-soft), rgba(24, 74, 69, 0.06))"
@@ -69,7 +64,7 @@ export default function JobCard({ job }: Props) {
           )}
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p
@@ -105,7 +100,6 @@ export default function JobCard({ job }: Props) {
 
             {job.salary && (
               <div className="flex items-center gap-1 text-[11px] font-medium text-muted">
-                {/* <DollarSign size={10} /> */}
                 {job.salary}
               </div>
             )}
@@ -117,9 +111,7 @@ export default function JobCard({ job }: Props) {
           </div>
 
           <div className="mt-4 flex items-center justify-between">
-            <span className="text-xs font-medium text-muted md:hidden">
-              {postedAt}
-            </span>
+            <span className="text-xs font-medium text-muted md:hidden">{postedAt}</span>
             <span
               className="inline-flex items-center gap-1 text-xs font-semibold"
               style={{ color: "var(--brand)" }}

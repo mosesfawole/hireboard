@@ -1,12 +1,13 @@
 "use client";
+
 import { useEffect, useState, useCallback } from "react";
+import { Shield } from "lucide-react";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import StatsCards from "@/components/admin/StatsCards";
 import JobsTable from "@/components/admin/JobsTable";
 import CompaniesTable from "@/components/admin/CompaniesTables";
 import type { AdminStats, Job, Company } from "@/types";
-import { Shield } from "lucide-react";
 
 type Tab = "overview" | "jobs" | "companies";
 
@@ -16,15 +17,25 @@ export default function AdminPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
+    setError(null);
+
     try {
-      const res = await fetch("/api/admin/stats");
-      const data = await res.json();
+      const response = await fetch("/api/admin/stats");
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error ?? "Failed to load admin data");
+      }
+
+      const data = await response.json();
       setStats(data.stats);
       setJobs(data.jobs);
       setCompanies(data.companies);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Failed to load admin data");
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +52,7 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "transparent" }}>
+    <div className="flex min-h-screen flex-col" style={{ background: "transparent" }}>
       <Navbar />
 
       <main className="page-shell flex-1 space-y-6">
@@ -64,7 +75,7 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <h1
-                    className="text-3xl font-display font-bold tracking-tight"
+                    className="font-display text-3xl font-bold tracking-tight"
                     style={{ color: "var(--text)" }}
                   >
                     Admin Dashboard
@@ -91,6 +102,7 @@ export default function AdminPage() {
           {tabs.map((tab) => (
             <button
               key={tab.key}
+              type="button"
               onClick={() => setActiveTab(tab.key)}
               className={`ui-tab px-4 py-2.5 text-xs transition-all ${
                 activeTab === tab.key ? "ui-tab-active" : "ui-tab-inactive"
@@ -101,10 +113,16 @@ export default function AdminPage() {
           ))}
         </div>
 
+        {error && (
+          <div className="ui-alert ui-alert-error text-xs font-medium" aria-live="polite">
+            {error}
+          </div>
+        )}
+
         {isLoading ? (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="surface-card h-24 animate-pulse" />
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="surface-card h-24 animate-pulse" />
             ))}
           </div>
         ) : (
@@ -113,13 +131,13 @@ export default function AdminPage() {
               <div className="space-y-6">
                 <StatsCards stats={stats} />
 
-                {jobs.filter((j) => j.status === "PENDING").length > 0 && (
+                {jobs.filter((job) => job.status === "PENDING").length > 0 && (
                   <div className="space-y-3">
                     <h2 className="text-sm font-display font-bold" style={{ color: "var(--text)" }}>
-                      Pending Review ({jobs.filter((j) => j.status === "PENDING").length})
+                      Pending Review ({jobs.filter((job) => job.status === "PENDING").length})
                     </h2>
                     <JobsTable
-                      jobs={jobs.filter((j) => j.status === "PENDING")}
+                      jobs={jobs.filter((job) => job.status === "PENDING")}
                       onRefresh={fetchData}
                     />
                   </div>

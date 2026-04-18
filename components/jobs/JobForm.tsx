@@ -1,29 +1,11 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Send, Loader2 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
+import { JOB_CATEGORIES, JOB_TYPE_OPTIONS } from "@/lib/job-ui";
 import type { CreateJobInput, JobType } from "@/types";
-
-const CATEGORIES = [
-  "Engineering",
-  "Design",
-  "Marketing",
-  "Sales",
-  "Finance",
-  "HR",
-  "Operations",
-  "Legal",
-  "Other",
-];
-
-const JOB_TYPES: { label: string; value: JobType }[] = [
-  { label: "Full Time", value: "FULL_TIME" },
-  { label: "Part Time", value: "PART_TIME" },
-  { label: "Contract", value: "CONTRACT" },
-  { label: "Remote", value: "REMOTE" },
-  { label: "Internship", value: "INTERNSHIP" },
-];
 
 type JobFormState = Omit<CreateJobInput, "company_id"> & {
   salary: string;
@@ -79,9 +61,7 @@ export default function JobForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div
-          className="ui-alert ui-alert-error text-sm font-medium"
-        >
+        <div className="ui-alert ui-alert-error text-sm font-medium" aria-live="polite">
           {error}
         </div>
       )}
@@ -96,11 +76,12 @@ export default function JobForm() {
           value={form.title}
           onChange={(event) => update("title", event.target.value)}
           className={inputClass}
+          autoComplete="organization-title"
           required
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
             Job Type *
@@ -111,7 +92,7 @@ export default function JobForm() {
             className={inputClass}
             required
           >
-            {JOB_TYPES.map((jobType) => (
+            {JOB_TYPE_OPTIONS.map((jobType) => (
               <option key={jobType.value} value={jobType.value}>
                 {jobType.label}
               </option>
@@ -129,7 +110,7 @@ export default function JobForm() {
             className={inputClass}
             required
           >
-            {CATEGORIES.map((category) => (
+            {JOB_CATEGORIES.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
@@ -138,7 +119,7 @@ export default function JobForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <label className="text-xs font-semibold tracking-wide" style={{ color: "var(--text)" }}>
             Location *
@@ -149,6 +130,7 @@ export default function JobForm() {
             value={form.location}
             onChange={(event) => update("location", event.target.value)}
             className={inputClass}
+            autoComplete="address-level2"
             required
           />
         </div>
@@ -163,6 +145,7 @@ export default function JobForm() {
             value={form.salary}
             onChange={(event) => update("salary", event.target.value)}
             className={inputClass}
+            inputMode="text"
           />
         </div>
       </div>
@@ -192,6 +175,7 @@ export default function JobForm() {
           value={form.apply_url}
           onChange={(event) => update("apply_url", event.target.value)}
           className={inputClass}
+          inputMode="url"
           required
         />
         <p className="text-[11px] font-medium text-muted">
@@ -202,7 +186,7 @@ export default function JobForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="ui-button w-full flex items-center justify-center gap-2 py-3.5 text-sm font-bold transition-all"
+        className="ui-button flex w-full items-center justify-center gap-2 py-3.5 text-sm font-bold transition-all"
         style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
       >
         {isLoading ? (
@@ -218,7 +202,7 @@ export default function JobForm() {
         )}
       </button>
 
-      <p className="text-[11px] font-medium text-center text-muted">
+      <p className="text-center text-[11px] font-medium text-muted">
         Your job will be reviewed by our team before going live
       </p>
     </form>

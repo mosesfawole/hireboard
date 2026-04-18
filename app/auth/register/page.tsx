@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -104,7 +105,7 @@ export default function RegisterPage() {
           <div className="space-y-2 text-center lg:text-left">
             <div className="flex items-center justify-center gap-2 lg:justify-start">
               <Briefcase size={20} style={{ color: "var(--brand)" }} />
-              <span className="font-display font-bold text-lg" style={{ color: "var(--text)" }}>
+              <span className="font-display text-lg font-bold" style={{ color: "var(--text)" }}>
                 Hire<span style={{ color: "var(--brand)" }}>Board</span>
               </span>
             </div>
@@ -115,7 +116,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="surface-card-strong space-y-4 p-6">
-            {error && <div className="ui-alert ui-alert-error text-xs font-medium">{error}</div>}
+            {error && (
+              <div className="ui-alert ui-alert-error text-xs font-medium" aria-live="polite">
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
@@ -128,6 +133,7 @@ export default function RegisterPage() {
                   value={form.companyName}
                   onChange={(event) => update("companyName", event.target.value)}
                   className={inputClass}
+                  autoComplete="organization"
                   required
                 />
               </div>
@@ -142,6 +148,7 @@ export default function RegisterPage() {
                   value={form.email}
                   onChange={(event) => update("email", event.target.value)}
                   className={inputClass}
+                  autoComplete="email"
                   required
                 />
               </div>
@@ -156,6 +163,8 @@ export default function RegisterPage() {
                   value={form.password}
                   onChange={(event) => update("password", event.target.value)}
                   className={inputClass}
+                  autoComplete="new-password"
+                  minLength={8}
                   required
                 />
               </div>
@@ -171,6 +180,7 @@ export default function RegisterPage() {
                     value={form.website}
                     onChange={(event) => update("website", event.target.value)}
                     className={inputClass}
+                    autoComplete="url"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -183,6 +193,7 @@ export default function RegisterPage() {
                     value={form.location}
                     onChange={(event) => update("location", event.target.value)}
                     className={inputClass}
+                    autoComplete="address-level2"
                   />
                 </div>
               </div>
@@ -208,7 +219,8 @@ export default function RegisterPage() {
               >
                 {isLoading ? (
                   <>
-                    <Loader2 size={14} className="animate-spin" /> Creating account...
+                    <Loader2 size={14} className="animate-spin" />
+                    {" "}Creating account...
                   </>
                 ) : (
                   <>

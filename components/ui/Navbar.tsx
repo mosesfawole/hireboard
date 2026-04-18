@@ -1,8 +1,8 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { useJobStore } from "@/store/useJobStore";
-import { useEffect, useState } from "react";
 import {
   Briefcase,
   Sun,
@@ -14,6 +14,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { useJobStore } from "@/store/useJobStore";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -70,9 +71,12 @@ export default function Navbar() {
         </Link>
 
         <button
+          type="button"
           onClick={() => setMenuOpen((state) => !state)}
           className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-full border border-(--panel-border) bg-(--control-bg) text-sm text-(--text) shadow-sm transition hover:bg-(--control-hover) md:hidden"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
         >
           {menuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
@@ -130,6 +134,7 @@ export default function Navbar() {
 
           {session ? (
             <button
+              type="button"
               onClick={() => signOut({ callbackUrl: "/jobs" })}
               className="ui-button-secondary flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold"
             >
@@ -154,6 +159,7 @@ export default function Navbar() {
           )}
 
           <button
+            type="button"
             onClick={toggleTheme}
             className="ui-button-secondary p-2.5 transition-all"
             aria-label="Toggle theme"
@@ -168,12 +174,15 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden mx-auto mt-2 w-full max-w-7xl rounded-2xl border border-(--panel-border) bg-(--panel) p-3 shadow-lg backdrop-blur-xl">
+        <div
+          id="mobile-navigation"
+          className="mx-auto mt-2 w-full max-w-7xl rounded-2xl border border-(--panel-border) bg-(--panel) p-3 shadow-lg backdrop-blur-xl md:hidden"
+        >
           <div className="flex flex-col gap-2">
             <Link
               href="/jobs"
               onClick={() => setMenuOpen(false)}
-              className="ui-button-secondary w-full text-left px-3 py-2 text-sm font-semibold"
+              className="ui-button-secondary w-full px-3 py-2 text-left text-sm font-semibold"
             >
               Browse Jobs
             </Link>
@@ -182,7 +191,7 @@ export default function Navbar() {
               <Link
                 href="/admin"
                 onClick={() => setMenuOpen(false)}
-                className="ui-button-secondary w-full text-left px-3 py-2 text-sm font-semibold"
+                className="ui-button-secondary w-full px-3 py-2 text-left text-sm font-semibold"
                 style={{ color: "#b37bff" }}
               >
                 Admin Dashboard
@@ -194,14 +203,14 @@ export default function Navbar() {
                 <Link
                   href="/company/dashboard"
                   onClick={() => setMenuOpen(false)}
-                  className="ui-button-secondary w-full text-left px-3 py-2 text-sm font-semibold"
+                  className="ui-button-secondary w-full px-3 py-2 text-left text-sm font-semibold"
                 >
                   Company Dashboard
                 </Link>
                 <Link
                   href="/company/post"
                   onClick={() => setMenuOpen(false)}
-                  className="ui-button w-full text-left px-3 py-2 text-sm font-bold"
+                  className="ui-button w-full px-3 py-2 text-left text-sm font-bold"
                 >
                   Post a Job
                 </Link>
@@ -212,7 +221,7 @@ export default function Navbar() {
               <Link
                 href="/auth/register"
                 onClick={() => setMenuOpen(false)}
-                className="ui-button-secondary w-full text-left px-3 py-2 text-sm font-semibold"
+                className="ui-button-secondary w-full px-3 py-2 text-left text-sm font-semibold"
               >
                 For Employers
               </Link>
@@ -220,11 +229,12 @@ export default function Navbar() {
 
             {session ? (
               <button
+                type="button"
                 onClick={() => {
                   setMenuOpen(false);
                   signOut({ callbackUrl: "/jobs" });
                 }}
-                className="ui-button-secondary w-full text-left px-3 py-2 text-sm font-semibold"
+                className="ui-button-secondary w-full px-3 py-2 text-left text-sm font-semibold"
               >
                 Sign out
               </button>
@@ -233,14 +243,14 @@ export default function Navbar() {
                 <Link
                   href="/auth/login"
                   onClick={() => setMenuOpen(false)}
-                  className="ui-button-secondary w-full text-left px-3 py-2 text-sm font-semibold"
+                  className="ui-button-secondary w-full px-3 py-2 text-left text-sm font-semibold"
                 >
                   Login
                 </Link>
                 <Link
                   href="/auth/register"
                   onClick={() => setMenuOpen(false)}
-                  className="ui-button w-full text-left px-3 py-2 text-sm font-bold"
+                  className="ui-button w-full px-3 py-2 text-left text-sm font-bold"
                 >
                   Post a Job
                 </Link>
@@ -248,6 +258,7 @@ export default function Navbar() {
             )}
 
             <button
+              type="button"
               onClick={() => {
                 toggleTheme();
                 setMenuOpen(false);

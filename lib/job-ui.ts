@@ -1,3 +1,5 @@
+import type { JobType } from "@/types";
+
 export type BadgeVariant =
   | "green"
   | "blue"
@@ -10,8 +12,31 @@ export type BadgeVariant =
   | "rejected"
   | "closed";
 
-export function getJobTypeBadge(type: string): BadgeVariant {
-  const map: Record<string, BadgeVariant> = {
+export const JOB_CATEGORIES = [
+  "Engineering",
+  "Design",
+  "Marketing",
+  "Sales",
+  "Finance",
+  "HR",
+  "Operations",
+  "Legal",
+  "Other",
+] as const;
+
+export const JOB_TYPE_OPTIONS: ReadonlyArray<{
+  label: string;
+  value: JobType;
+}> = [
+  { label: "Full Time", value: "FULL_TIME" },
+  { label: "Part Time", value: "PART_TIME" },
+  { label: "Contract", value: "CONTRACT" },
+  { label: "Remote", value: "REMOTE" },
+  { label: "Internship", value: "INTERNSHIP" },
+];
+
+export function getJobTypeBadge(type: JobType): BadgeVariant {
+  const map: Record<JobType, BadgeVariant> = {
     FULL_TIME: "green",
     PART_TIME: "blue",
     CONTRACT: "purple",
@@ -19,7 +44,7 @@ export function getJobTypeBadge(type: string): BadgeVariant {
     INTERNSHIP: "muted",
   };
 
-  return map[type] ?? "muted";
+  return map[type];
 }
 
 export function getStatusBadge(status: string): BadgeVariant {
@@ -33,8 +58,8 @@ export function getStatusBadge(status: string): BadgeVariant {
   return map[status] ?? "muted";
 }
 
-export function formatJobType(type: string): string {
-  const map: Record<string, string> = {
+export function formatJobType(type: JobType): string {
+  const map: Record<JobType, string> = {
     FULL_TIME: "Full Time",
     PART_TIME: "Part Time",
     CONTRACT: "Contract",
@@ -42,5 +67,5 @@ export function formatJobType(type: string): string {
     INTERNSHIP: "Internship",
   };
 
-  return map[type] ?? type;
+  return map[type];
 }

@@ -1,7 +1,8 @@
 "use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { Building2, Globe, MapPin, Trash2 } from "lucide-react";
-import { useState } from "react";
 import type { Company } from "@/types";
 
 interface Props {
@@ -15,8 +16,13 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
   const deleteCompany = async (id: string) => {
     if (!confirm("Delete this company and all their jobs?")) return;
     setLoading(id);
+
     try {
-      await fetch(`/api/companies/${id}`, { method: "DELETE" });
+      const response = await fetch(`/api/companies/${id}`, { method: "DELETE" });
+      if (!response.ok) {
+        throw new Error("Failed to delete company");
+      }
+
       onRefresh();
     } finally {
       setLoading(null);
@@ -30,29 +36,24 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
         style={{ borderBottom: "1px solid var(--panel-border)" }}
       >
         <div className="flex items-center gap-2">
-          <div className="w-1 h-4 rounded-full" style={{ background: "#8b5cf6" }} />
+          <div className="h-4 w-1 rounded-full" style={{ background: "#8b5cf6" }} />
           <h2
-            className="text-xs font-display font-bold tracking-widest uppercase"
+            className="font-display text-xs font-bold uppercase tracking-widest"
             style={{ color: "var(--text)" }}
           >
             All Companies
           </h2>
         </div>
-        <span className="text-xs font-medium text-muted">
-          {companies.length} total
-        </span>
+        <span className="text-xs font-medium text-muted">{companies.length} total</span>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="data-table w-full text-xs min-w-[500px]">
+        <table className="data-table min-w-[500px] w-full text-xs">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--panel-border)" }}>
               {["Company", "Location", "Website", "Jobs Posted", "Joined", "Actions"].map(
                 (heading) => (
-                  <th
-                    key={heading}
-                    className="text-left px-4 py-3 font-medium text-muted"
-                  >
+                  <th key={heading} className="px-4 py-3 text-left font-medium text-muted">
                     {heading}
                   </th>
                 ),
@@ -65,7 +66,7 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2.5">
                     <div
-                      className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shrink-0"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg"
                       style={{ background: "var(--surface-2)" }}
                     >
                       {company.logo ? (
@@ -81,7 +82,7 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
                       )}
                     </div>
                     <span
-                      className="font-semibold font-display"
+                      className="font-display font-semibold"
                       style={{ color: "var(--text)" }}
                     >
                       {company.name}
@@ -123,10 +124,12 @@ export default function CompaniesTable({ companies, onRefresh }: Props) {
 
                 <td className="px-4 py-3">
                   <button
+                    type="button"
                     onClick={() => deleteCompany(company.id)}
                     disabled={loading === company.id}
                     className="ui-button-danger p-1.5"
                     title="Delete company"
+                    aria-label={`Delete ${company.name}`}
                   >
                     <Trash2 size={11} />
                   </button>

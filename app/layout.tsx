@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import SessionProvider from "@/components/providers/SessionProvider";
 
@@ -20,30 +20,36 @@ export const metadata: Metadata = {
     "Browse hundreds of jobs across all industries. Post jobs, find talent.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${manrope.variable} ${spaceGrotesk.variable}`}
+    >
       <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
             try {
               const theme = localStorage.getItem('hireboard-theme');
               if (theme === 'dark' || !theme) document.documentElement.classList.add('dark');
-            } catch(e) {}
+            } catch (error) {}
           `,
           }}
         />
       </head>
-      <body className={`${manrope.variable} ${spaceGrotesk.variable} min-h-screen`}>
+      <body className="min-h-screen antialiased">
         <div className="app-backdrop" aria-hidden="true">
           <div className="mesh-orb mesh-orb-one" />
           <div className="mesh-orb mesh-orb-two" />

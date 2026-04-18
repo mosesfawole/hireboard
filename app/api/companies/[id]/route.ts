@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { supabase } from "@/lib/supabase";
+import { deleteCompanyById } from "@/lib/db";
 
 export async function DELETE(
   req: NextRequest,
@@ -13,12 +13,13 @@ export async function DELETE(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const { error } = await supabase
-      .from("companies")
-      .delete()
-      .eq("id", id);
-
-    if (error) throw new Error(error.message);
+    const deleted = await deleteCompanyById(id);
+    if (!deleted) {
+      return NextResponse.json(
+        { error: "Failed to delete company" },
+        { status: 500 },
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch {

@@ -4,34 +4,32 @@ import { auth } from "@/auth";
 import { getErrorMessage } from "@/lib/errors";
 import type { CreateJobInput } from "@/types";
 
-// GET /api/jobs — fetch all active jobs for the public board
-// No auth required — anyone can browse jobs
 export async function GET(req: NextRequest) {
   try {
     const companyId = req.nextUrl.searchParams.get("companyId");
 
     if (companyId) {
-      // Return jobs for a specific company
+      const session = await auth();
+      const canAccessCompanyJobs =
+        session?.user.role === "ADMIN" || session?.user.companyId === companyId;
+
+      if (!canAccessCompanyJobs) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
       const jobs = await getJobsByCompany(companyId);
       return NextResponse.json(jobs);
     }
 
-    // Return all active jobs for public board
     const jobs = await getActiveJobs();
     return NextResponse.json(jobs);
   } catch {
-    return NextResponse.json(
-      { error: "Failed to fetch jobs" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch jobs" }, { status: 500 });
   }
 }
 
-// POST /api/jobs — create a new job listing
-// Requires a company account — checks session before doing anything
 export async function POST(req: NextRequest) {
   try {
-    // Check the user is logged in
     const session = await auth();
     if (!session) {
       return NextResponse.json(
@@ -40,7 +38,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check they have a company account
     const { companyId } = session.user;
     if (!companyId) {
       return NextResponse.json(
@@ -60,7 +57,6 @@ export async function POST(req: NextRequest) {
       apply_url: body.apply_url?.trim(),
     };
 
-    // Basic validation — make sure required fields are present
     const required = [
       "title",
       "description",
@@ -69,12 +65,10 @@ export async function POST(req: NextRequest) {
       "category",
       "apply_url",
     ];
+
     for (const field of required) {
       if (!normalizedBody[field as keyof typeof normalizedBody]) {
-        return NextResponse.json(
-          { error: `${field} is required` },
-          { status: 400 },
-        );
+        return NextResponse.json({ error: `${field} is required` }, { status: 400 });
       }
     }
 
@@ -87,9 +81,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const message = getErrorMessage(error, "Failed to create job");
     console.error("[POST /api/jobs]", message);
-    return NextResponse.json(
-      { error: message },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

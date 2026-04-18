@@ -4,6 +4,7 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { Briefcase, Plus, Sparkles, Trash2 } from "lucide-react";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import Badge, {
@@ -11,7 +12,6 @@ import Badge, {
   getJobTypeBadge,
   getStatusBadge,
 } from "@/components/ui/Badge";
-import { Briefcase, Plus, Sparkles, Trash2 } from "lucide-react";
 import type { Job } from "@/types";
 
 function CompanyDashboardContent() {
@@ -19,18 +19,32 @@ function CompanyDashboardContent() {
   const searchParams = useSearchParams();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const justPosted = searchParams.get("posted") === "true";
   const companyId = session?.user?.companyId;
 
   const fetchJobs = useCallback(async () => {
-    if (!companyId) return;
+    if (!companyId) {
+      setJobs([]);
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
+    setError(null);
+
     try {
       const response = await fetch(`/api/jobs?companyId=${companyId}`);
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error ?? "Failed to load jobs");
+      }
+
       const data = await response.json();
       setJobs(Array.isArray(data) ? data : []);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Failed to load jobs");
     } finally {
       setIsLoading(false);
     }
@@ -42,12 +56,22 @@ function CompanyDashboardContent() {
 
   const deleteJob = async (id: string) => {
     if (!confirm("Delete this job?")) return;
-    await fetch(`/api/jobs/${id}`, { method: "DELETE" });
-    fetchJobs();
+
+    try {
+      const response = await fetch(`/api/jobs/${id}`, { method: "DELETE" });
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error ?? "Failed to delete job");
+      }
+
+      await fetchJobs();
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Failed to delete job");
+    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "transparent" }}>
+    <div className="flex min-h-screen flex-col" style={{ background: "transparent" }}>
       <Navbar />
 
       <main className="page-shell flex-1 space-y-6">
@@ -60,7 +84,7 @@ function CompanyDashboardContent() {
               </span>
               <div>
                 <h1
-                  className="text-3xl font-display font-bold tracking-tight"
+                  className="font-display text-3xl font-bold tracking-tight"
                   style={{ color: "var(--text)" }}
                 >
                   Your job listings
@@ -100,6 +124,12 @@ function CompanyDashboardContent() {
           </div>
         )}
 
+        {error && (
+          <div className="ui-alert ui-alert-error text-xs font-medium" aria-live="polite">
+            {error}
+          </div>
+        )}
+
         {isLoading ? (
           <div className="space-y-3">
             {[...Array(3)].map((_, index) => (
@@ -122,7 +152,7 @@ function CompanyDashboardContent() {
               <div key={job.id} className="surface-card flex items-center gap-4 p-5">
                 <div className="min-w-0 flex-1">
                   <p
-                    className="truncate text-base font-display font-bold"
+                    className="truncate font-display text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {job.title}
@@ -137,8 +167,10 @@ function CompanyDashboardContent() {
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => deleteJob(job.id)}
-                  className="ui-button-danger p-2.5 shrink-0"
+                  className="ui-button-danger shrink-0 p-2.5"
+                  aria-label={`Delete ${job.title}`}
                 >
                   <Trash2 size={13} />
                 </button>

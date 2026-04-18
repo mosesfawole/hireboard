@@ -1,5 +1,3 @@
-// ── Job types ──────────────────────────────────────────────────────
-
 export type JobType =
   | "FULL_TIME"
   | "PART_TIME"
@@ -9,7 +7,6 @@ export type JobType =
 
 export type JobStatus = "PENDING" | "ACTIVE" | "REJECTED" | "CLOSED";
 
-// What a job looks like when fetched from the database
 export interface Job {
   id: string;
   title: string;
@@ -23,13 +20,9 @@ export interface Job {
   featured: boolean;
   company_id: string;
   created_at: string;
-  // When we fetch a job we also join the company data
-  // so you can show the company name and logo on the job card
   company?: Company;
 }
 
-// What you send when creating a new job
-// No id, status or created_at — the database generates those
 export interface CreateJobInput {
   title: string;
   description: string;
@@ -41,8 +34,6 @@ export interface CreateJobInput {
   company_id: string;
 }
 
-// ── Company types ──────────────────────────────────────────────────
-
 export interface Company {
   id: string;
   name: string;
@@ -52,7 +43,6 @@ export interface Company {
   location?: string;
   user_id: string;
   created_at: string;
-  // When fetching a company we can also get their jobs
   jobs?: Job[];
 }
 
@@ -65,8 +55,6 @@ export interface CreateCompanyInput {
   user_id: string;
 }
 
-// ── User types ─────────────────────────────────────────────────────
-
 export type UserRole = "ADMIN" | "COMPANY";
 
 export interface User {
@@ -75,36 +63,9 @@ export interface User {
   password?: string;
   role: UserRole;
   created_at: string;
-  // A user can have one company profile
   company?: Company;
 }
 
-// What you send when registering
-export interface RegisterInput {
-  email: string;
-  password: string;
-  companyName: string;
-}
-
-export interface LoginInput {
-  email: string;
-  password: string;
-}
-
-// ── Auth session ───────────────────────────────────────────────────
-
-// What gets stored in the NextAuth session
-// Available on every page via useSession()
-export interface SessionUser {
-  id: string;
-  email: string;
-  role: UserRole;
-  companyId?: string;
-}
-
-// ── Filter types ───────────────────────────────────────────────────
-
-// What the job filter bar controls
 export interface JobFilters {
   search: string;
   category: string;
@@ -112,9 +73,6 @@ export interface JobFilters {
   location: string;
 }
 
-// ── Admin stats ────────────────────────────────────────────────────
-
-// What the admin dashboard overview shows
 export interface AdminStats {
   totalJobs: number;
   activeJobs: number;

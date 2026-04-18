@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
 
@@ -39,10 +40,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <p
-              className="text-sm font-semibold"
-              style={{ color: "var(--text)" }}
-            >
+            <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>
               Explore
             </p>
             <div className="mt-4 space-y-3 text-sm text-muted">
@@ -62,10 +60,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <p
-              className="text-sm font-semibold"
-              style={{ color: "var(--text)" }}
-            >
+            <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>
               Employers
             </p>
             <div className="mt-4 space-y-3 text-sm text-muted">
@@ -85,10 +80,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <p
-              className="text-sm font-semibold"
-              style={{ color: "var(--text)" }}
-            >
+            <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>
               Company
             </p>
             <div className="mt-4 space-y-3 text-sm text-muted">
@@ -109,7 +101,7 @@ export default function Footer() {
           className="mt-8 flex flex-col gap-3 border-t pt-4 text-sm text-muted md:flex-row md:items-center md:justify-between"
           style={{ borderColor: "var(--panel-border)" }}
         >
-          <p>© 2026 HireBoard. All rights reserved.</p>
+          <p>Copyright 2026 HireBoard. All rights reserved.</p>
           <p>
             Designed and built by{" "}
             <Link

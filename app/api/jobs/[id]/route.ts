@@ -1,9 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getJobById, updateJob, deleteJob } from "@/lib/db";
 import { auth } from "@/auth";
+import type { Job, JobType } from "@/types";
 
-// GET /api/jobs/[id] — fetch a single job
-// No auth required
+function isEditableJobType(value: unknown): value is JobType {
+  return (
+    value === "FULL_TIME" ||
+    value === "PART_TIME" ||
+    value === "CONTRACT" ||
+    value === "REMOTE" ||
+    value === "INTERNSHIP"
+  );
+}
+
+function pickCompanyJobUpdates(body: Record<string, unknown>): Partial<Job> {
+  const updates: Partial<Job> = {};
+
+  if (typeof body.title === "string") updates.title = body.title.trim();
+  if (typeof body.description === "string") {
+    updates.description = body.description.trim();
+  }
+  if (typeof body.location === "string") updates.location = body.location.trim();
+  if (typeof body.salary === "string") updates.salary = body.salary.trim() || undefined;
+  if (typeof body.category === "string") updates.category = body.category.trim();
+  if (typeof body.apply_url === "string") updates.apply_url = body.apply_url.trim();
+  if (isEditableJobType(body.type)) updates.type = body.type;
+
+  return updates;
+}
+
+function pickAdminJobUpdates(body: Record<string, unknown>): Partial<Job> {
+  const updates = pickCompanyJobUpdates(body);
+
+  if (
+    body.status === "PENDING" ||
+    body.status === "ACTIVE" ||
+    body.status === "REJECTED" ||
+    body.status === "CLOSED"
+  ) {
+    updates.status = body.status;
+  }
+
+  if (typeof body.featured === "boolean") {
+    updates.featured = body.featured;
+  }
+
+  return updates;
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -11,18 +55,27 @@ export async function GET(
   try {
     const { id } = await params;
     const job = await getJobById(id);
+
     if (!job) {
       return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
+
+    if (job.status !== "ACTIVE") {
+      const session = await auth();
+      const canAccessDraft =
+        session?.user.role === "ADMIN" || session?.user.companyId === job.company_id;
+
+      if (!canAccessDraft) {
+        return NextResponse.json({ error: "Job not found" }, { status: 404 });
+      }
+    }
+
     return NextResponse.json(job);
   } catch {
     return NextResponse.json({ error: "Failed to fetch job" }, { status: 500 });
   }
 }
 
-// PATCH /api/jobs/[id] — update a job
-// Companies can only update their own jobs
-// Admins can update any job (used for approving/rejecting)
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -35,17 +88,28 @@ export async function PATCH(
     }
 
     const { role, companyId } = session.user;
+    const existing = await getJobById(id);
 
-    // If company, verify they own this job
-    if (role === "COMPANY") {
-      const existing = await getJobById(id);
-      if (!existing || existing.company_id !== companyId) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
+    if (!existing) {
+      return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
 
-    const body = await req.json();
-    const updated = await updateJob(id, body);
+    if (role === "COMPANY" && existing.company_id !== companyId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const body = (await req.json()) as Record<string, unknown>;
+    const updates =
+      role === "ADMIN" ? pickAdminJobUpdates(body) : pickCompanyJobUpdates(body);
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json(
+        { error: "No valid job fields were provided" },
+        { status: 400 },
+      );
+    }
+
+    const updated = await updateJob(id, updates);
 
     if (!updated) {
       return NextResponse.json(
@@ -56,16 +120,10 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch {
-    return NextResponse.json(
-      { error: "Failed to update job" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to update job" }, { status: 500 });
   }
 }
 
-// DELETE /api/jobs/[id] — delete a job
-// Companies can only delete their own jobs
-// Admins can delete any job
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -78,12 +136,14 @@ export async function DELETE(
     }
 
     const { role, companyId } = session.user;
+    const existing = await getJobById(id);
 
-    if (role === "COMPANY") {
-      const existing = await getJobById(id);
-      if (!existing || existing.company_id !== companyId) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
+    if (!existing) {
+      return NextResponse.json({ error: "Job not found" }, { status: 404 });
+    }
+
+    if (role === "COMPANY" && existing.company_id !== companyId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const success = await deleteJob(id);
@@ -96,9 +156,6 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch {
-    return NextResponse.json(
-      { error: "Failed to delete job" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to delete job" }, { status: 500 });
   }
 }

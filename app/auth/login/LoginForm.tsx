@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Briefcase, Loader2, Sparkles } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
@@ -33,14 +33,13 @@ export default function LoginForm() {
         return;
       }
 
-      const response = await fetch("/api/auth/session");
-      const session = await response.json();
+      const session = await getSession();
       const role = session?.user?.role;
 
       if (role === "ADMIN") {
-        router.push("/admin");
+        router.replace("/admin");
       } else {
-        router.push("/company/dashboard");
+        router.replace("/company/dashboard");
       }
     } catch (error) {
       console.error("[LoginForm]", getErrorMessage(error));
@@ -99,7 +98,7 @@ export default function LoginForm() {
           <div className="space-y-2 text-center lg:text-left">
             <div className="flex items-center justify-center gap-2 lg:justify-start">
               <Briefcase size={20} style={{ color: "var(--brand)" }} />
-              <span className="font-display font-bold text-lg" style={{ color: "var(--text)" }}>
+              <span className="font-display text-lg font-bold" style={{ color: "var(--text)" }}>
                 Hire<span style={{ color: "var(--brand)" }}>Board</span>
               </span>
             </div>
@@ -110,13 +109,17 @@ export default function LoginForm() {
           </div>
 
           {justRegistered && (
-            <div className="ui-alert ui-alert-success text-center text-xs font-medium">
+            <div className="ui-alert ui-alert-success text-center text-xs font-medium" aria-live="polite">
               Account created successfully. Please sign in.
             </div>
           )}
 
           <div className="surface-card-strong space-y-4 p-6">
-            {error && <div className="ui-alert ui-alert-error text-xs font-medium">{error}</div>}
+            {error && (
+              <div className="ui-alert ui-alert-error text-xs font-medium" aria-live="polite">
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
@@ -137,6 +140,7 @@ export default function LoginForm() {
                     }))
                   }
                   className={inputClass}
+                  autoComplete="email"
                   required
                 />
               </div>
@@ -159,6 +163,7 @@ export default function LoginForm() {
                     }))
                   }
                   className={inputClass}
+                  autoComplete="current-password"
                   required
                 />
               </div>

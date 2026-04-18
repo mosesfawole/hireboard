@@ -1,26 +1,8 @@
 "use client";
+
 import { MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 import { useJobStore } from "@/store/useJobStore";
-
-const CATEGORIES = [
-  "Engineering",
-  "Design",
-  "Marketing",
-  "Sales",
-  "Finance",
-  "HR",
-  "Operations",
-  "Legal",
-  "Other",
-];
-
-const JOB_TYPES = [
-  { label: "Full Time", value: "FULL_TIME" },
-  { label: "Part Time", value: "PART_TIME" },
-  { label: "Contract", value: "CONTRACT" },
-  { label: "Remote", value: "REMOTE" },
-  { label: "Internship", value: "INTERNSHIP" },
-];
+import { JOB_CATEGORIES, JOB_TYPE_OPTIONS } from "@/lib/job-ui";
 
 export default function JobFilters() {
   const { filters, setFilter, clearFilters } = useJobStore();
@@ -56,13 +38,16 @@ export default function JobFilters() {
             type="text"
             placeholder="Search jobs, companies..."
             value={filters.search}
-            onChange={(e) => setFilter("search", e.target.value)}
+            onChange={(event) => setFilter("search", event.target.value)}
             className="ui-input w-full py-3 pl-11 pr-10 text-sm"
+            aria-label="Search jobs"
           />
           {filters.search && (
             <button
+              type="button"
               onClick={() => setFilter("search", "")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted"
+              aria-label="Clear search"
             >
               <X size={13} />
             </button>
@@ -71,26 +56,26 @@ export default function JobFilters() {
 
         <select
           value={filters.category}
-          onChange={(e) => setFilter("category", e.target.value)}
+          onChange={(event) => setFilter("category", event.target.value)}
           className="ui-input min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
         >
           <option value="">All Categories</option>
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
+          {JOB_CATEGORIES.map((category) => (
+            <option key={category} value={category}>
+              {category}
             </option>
           ))}
         </select>
 
         <select
           value={filters.type}
-          onChange={(e) => setFilter("type", e.target.value)}
+          onChange={(event) => setFilter("type", event.target.value)}
           className="ui-input min-w-[140px] px-4 py-3 text-sm font-medium outline-none"
         >
           <option value="">All Types</option>
-          {JOB_TYPES.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.label}
+          {JOB_TYPE_OPTIONS.map((jobType) => (
+            <option key={jobType.value} value={jobType.value}>
+              {jobType.label}
             </option>
           ))}
         </select>
@@ -105,13 +90,15 @@ export default function JobFilters() {
             type="text"
             placeholder="Location..."
             value={filters.location}
-            onChange={(e) => setFilter("location", e.target.value)}
+            onChange={(event) => setFilter("location", event.target.value)}
             className="ui-input min-w-[140px] py-3 pl-11 pr-4 text-sm"
+            aria-label="Filter by location"
           />
         </div>
 
         {hasActiveFilters && (
           <button
+            type="button"
             onClick={clearFilters}
             className="ui-button-danger flex items-center justify-center gap-1.5 px-4 py-3 text-xs font-semibold transition-colors"
           >
