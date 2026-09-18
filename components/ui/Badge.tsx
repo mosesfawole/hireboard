@@ -13,16 +13,16 @@ interface BadgeProps {
 
 // Maps each variant to its color values
 const variants: Record<BadgeProps["variant"], { bg: string; color: string }> = {
-  green: { bg: "rgba(0,212,170,0.1)", color: "#00d4aa" },
-  blue: { bg: "rgba(77,159,255,0.1)", color: "#4d9fff" },
-  purple: { bg: "rgba(167,139,250,0.1)", color: "#a78bfa" },
-  gold: { bg: "rgba(240,192,64,0.1)", color: "#f0c040" },
-  red: { bg: "rgba(255,77,109,0.1)", color: "#ff4d6d" },
-  muted: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" },
-  pending: { bg: "rgba(240,192,64,0.1)", color: "#f0c040" },
-  active: { bg: "rgba(0,212,170,0.1)", color: "#00d4aa" },
-  rejected: { bg: "rgba(255,77,109,0.1)", color: "#ff4d6d" },
-  closed: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" },
+  green: { bg: "var(--success-soft)", color: "var(--success)" },
+  blue: { bg: "#e1ecee", color: "#356c73" },
+  purple: { bg: "#e9e4ef", color: "#69557b" },
+  gold: { bg: "var(--warning-soft)", color: "var(--warning)" },
+  red: { bg: "var(--danger-soft)", color: "var(--danger)" },
+  muted: { bg: "var(--surface-2)", color: "var(--text-soft)" },
+  pending: { bg: "var(--warning-soft)", color: "var(--warning)" },
+  active: { bg: "var(--success-soft)", color: "var(--success)" },
+  rejected: { bg: "var(--danger-soft)", color: "var(--danger)" },
+  closed: { bg: "var(--surface-2)", color: "var(--text-soft)" },
 };
 
 export default function Badge({ label, variant }: BadgeProps) {

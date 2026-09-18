@@ -17,16 +17,16 @@ export default function JobCard({ job }: Props) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-1"
+      className="surface-card group block p-5 transition-all duration-200 hover:-translate-y-0.5 md:p-6"
       style={{
         background: job.featured
-          ? "linear-gradient(135deg, var(--brand-soft), rgba(24, 74, 69, 0.06))"
+          ? "var(--brand-soft)"
           : "var(--panel)",
         border: `1px solid ${
           job.featured ? "rgba(217, 108, 63, 0.22)" : "var(--panel-border)"
         }`,
         boxShadow: job.featured
-          ? "0 24px 50px rgba(185, 74, 34, 0.12)"
+          ? "0 12px 28px rgba(168, 64, 43, 0.12)"
           : "var(--panel-shadow)",
       }}
     >
@@ -40,14 +40,14 @@ export default function JobCard({ job }: Props) {
               borderColor: "rgba(185, 74, 34, 0.16)",
             }}
           >
-            FEATURED
+              EDITOR&apos;S PICK
           </span>
         </div>
       )}
 
       <div className="flex items-start gap-4">
         <div
-          className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl"
+          className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-(--panel-border)"
           style={{ background: "var(--surface-2)" }}
         >
           {company?.logo ? (
@@ -68,18 +68,18 @@ export default function JobCard({ job }: Props) {
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p
-                className="font-display truncate text-base font-bold leading-tight"
+                className="font-display truncate text-lg font-bold leading-tight"
                 style={{ color: "var(--text)" }}
               >
                 {job.title}
               </p>
-              <p className="mt-1 text-sm font-medium text-muted">
+              <p className="mt-1 text-sm text-muted">
                 {company?.name ?? "Unknown Company"}
               </p>
             </div>
 
             <div
-              className="hidden items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold text-muted md:flex"
+              className="hidden items-center gap-2 border-l border-(--panel-border) pl-3 text-[11px] font-semibold text-muted md:flex"
               style={{ background: "var(--bg-soft)" }}
             >
               <Clock3 size={11} />
@@ -116,7 +116,7 @@ export default function JobCard({ job }: Props) {
               className="inline-flex items-center gap-1 text-xs font-semibold"
               style={{ color: "var(--brand)" }}
             >
-              View role
+              See details
               <ArrowUpRight size={12} />
             </span>
           </div>

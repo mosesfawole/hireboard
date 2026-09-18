@@ -65,7 +65,7 @@ export default function Navbar() {
               HireBoard
             </span>
             <span className="text-[11px] font-semibold text-muted">
-              Premium hiring workflow
+              A clearer way to look for work
             </span>
           </div>
         </Link>

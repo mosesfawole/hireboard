@@ -13,8 +13,7 @@ export default function Footer() {
               <div
                 className="flex h-10 w-10 items-center justify-center rounded-2xl"
                 style={{
-                  background:
-                    "linear-gradient(135deg, var(--brand-soft), rgba(24, 74, 69, 0.12))",
+                  background: "var(--brand-soft)",
                   border: "1px solid var(--panel-border)",
                 }}
               >
@@ -28,14 +27,14 @@ export default function Footer() {
                   HireBoard
                 </p>
                 <p className="text-sm text-muted">
-                  Clean hiring experiences for modern teams.
+                  Better work starts with better listings.
                 </p>
               </div>
             </div>
 
             <p className="max-w-sm text-sm leading-6 text-muted">
-              A focused job board for companies that want polished listings and
-              candidates who want a clearer browsing experience.
+              HireBoard keeps the search focused: useful details, thoughtful companies,
+              and less noise between you and the next good role.
             </p>
           </div>
 
@@ -92,7 +91,7 @@ export default function Footer() {
               >
                 GitHub
               </Link>
-              <p>Built to feel premium without feeling heavy.</p>
+              <p>Made for the next right move.</p>
             </div>
           </div>
         </div>

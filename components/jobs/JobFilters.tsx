@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Search, SlidersHorizontal, X } from "lucide-react";
+import { MapPin, Search, X } from "lucide-react";
 import { useJobStore } from "@/store/useJobStore";
 import { JOB_CATEGORIES, JOB_TYPE_OPTIONS } from "@/lib/job-ui";
 
@@ -15,15 +15,11 @@ export default function JobFilters() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-            Refine results
+            Narrow the search
           </p>
           <p className="mt-1 text-sm" style={{ color: "var(--text)" }}>
             Search by role, category, type, or location.
           </p>
-        </div>
-        <div className="section-kicker">
-          <SlidersHorizontal size={12} />
-          Smart filters
         </div>
       </div>
 
