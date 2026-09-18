@@ -198,6 +198,12 @@ textarea {
   box-shadow: 0 9px 20px rgba(168, 64, 43, 0.24);
 }
 
+.ui-button:active,
+.ui-button-secondary:active,
+.ui-button-danger:active {
+  transform: translateY(0) scale(0.98);
+}
+
 .ui-button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
@@ -314,6 +320,43 @@ textarea {
 
 .animate-slide-up {
   animation: slideUp 0.4s ease forwards;
+}
+
+.motion-enter {
+  opacity: 0;
+  animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.job-results-list > a {
+  opacity: 0;
+  animation: slideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.job-results-list > a:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.job-results-list > a:nth-child(3) {
+  animation-delay: 110ms;
+}
+
+.job-results-list > a:nth-child(4) {
+  animation-delay: 160ms;
+}
+
+.job-results-list > a:nth-child(5) {
+  animation-delay: 210ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 .app-backdrop {

@@ -117,7 +117,10 @@ export default function JobCard({ job }: Props) {
               style={{ color: "var(--brand)" }}
             >
               See details
-              <ArrowUpRight size={12} />
+              <ArrowUpRight
+                size={12}
+                className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
             </span>
           </div>
         </div>

@@ -14,7 +14,7 @@ export default async function JobsPage() {
       <Navbar />
 
       <main className="page-shell flex-1 space-y-6">
-        <section className="surface-card-strong hero-panel p-6 md:p-9">
+        <section className="surface-card-strong hero-panel motion-enter p-6 md:p-9">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-3">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted">
@@ -57,7 +57,7 @@ export default async function JobsPage() {
           </div>
         </section>
 
-        <section className="surface-card p-4 md:p-5">
+        <section className="surface-card motion-enter p-4 md:p-5" style={{ animationDelay: "80ms" }}>
           <JobFilters />
         </section>
 

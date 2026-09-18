@@ -64,8 +64,8 @@ export default function JobList({ jobs }: Props) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="job-results-list space-y-4">
+      <div className="results-summary flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
             Results
