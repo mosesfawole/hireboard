@@ -3,11 +3,15 @@ import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import JobList from "@/components/jobs/JobList";
 import JobFilters from "@/components/jobs/JobFilters";
+import { placeholderJobs } from "@/lib/placeholder-jobs";
+import type { Job } from "@/types";
 import Link from "next/link";
 import { ArrowRight, Briefcase } from "lucide-react";
 
 export default async function JobsPage() {
-  const jobs = await getActiveJobs();
+  const activeJobs = await getActiveJobs();
+  const jobs: Job[] = activeJobs.length > 0 ? activeJobs : placeholderJobs;
+  const showingPreview = activeJobs.length === 0;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -39,7 +43,7 @@ export default async function JobsPage() {
             <div className="flex flex-wrap items-center gap-3">
               <div className="metric-card min-w-[180px]">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-                  Listed today
+                  {showingPreview ? "Preview roles" : "Listed today"}
                 </p>
                 <p
                   className="mt-2 font-display text-3xl font-bold"

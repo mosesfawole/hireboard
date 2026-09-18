@@ -30,17 +30,19 @@ export default function JobCard({ job }: Props) {
           : "var(--panel-shadow)",
       }}
     >
-      {job.featured && (
+      {(job.featured || job.isPlaceholder) && (
         <div className="mb-4 flex items-center gap-1">
           <span
             className="ui-badge"
             style={{
-              background: "var(--brand-soft)",
-              color: "var(--brand)",
-              borderColor: "rgba(185, 74, 34, 0.16)",
+              background: job.isPlaceholder
+                ? "var(--hero-accent-soft)"
+                : "var(--brand-soft)",
+              color: job.isPlaceholder ? "var(--hero-accent)" : "var(--brand)",
+              borderColor: "var(--panel-border)",
             }}
           >
-              EDITOR&apos;S PICK
+            {job.isPlaceholder ? "PREVIEW ROLE" : "EDITOR&apos;S PICK"}
           </span>
         </div>
       )}

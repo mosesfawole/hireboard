@@ -18,6 +18,7 @@ export interface Job {
   apply_url: string;
   status: JobStatus;
   featured: boolean;
+  isPlaceholder?: boolean;
   company_id: string;
   created_at: string;
   company?: Company;
